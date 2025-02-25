@@ -115,4 +115,52 @@ export default class Cookie {
     console.log("Distance = " + distance);
     return distance;
   }
+
+    /**
+   * renvoie true si c'est à une distance de 1 sinon false
+   * @param {*} cookie1 
+   * @param {*} cookie2 
+   * @returns 
+   */
+    static swapPossible(cookie1, cookie2) {
+
+      let distance = Cookie.distance(cookie1, cookie2);
+  
+      return distance === 1;
+    }
+
+
+    /**
+     * On swappe les cookies
+     * @param {*} c1 
+     * @param {*} c2 
+     */
+    static swapCookies(c1, c2) {
+
+      if(Cookie.swapPossible(c1, c2)) {
+        // on swappe les cookies dans le tableau
+        // On échange leurs images et types
+  
+        // On échange les types
+        let tmp = c1.type;
+        c1.type = c2.type;
+        c2.type = tmp;
+  
+        // On échange les images
+        tmp = c1.htmlImage.src;
+        c1.htmlImage.src = c2.htmlImage.src;
+        c2.htmlImage.src = tmp;
+
+        c1.deselectionnee();
+        c2.deselectionnee();
+      }
+
+    }
+
+    static getLCFromImg(img) {
+      return [img.dataset.ligne, img.dataset.colonne];
+    }
+
+
+  
 }
