@@ -25,6 +25,7 @@ export default class Cookie {
     this.type = type;
     this.ligne = ligne;
     this.colonne = colonne;
+    this.alignement = false;
 
     // On récupère l'URL de l'image correspondant au type
     // qui est un nombre entre 0 et 5
@@ -115,4 +116,26 @@ export default class Cookie {
     console.log("Distance = " + distance);
     return distance;
   }
+
+  supprimerCookie() {
+    // Remplacer l'image par une image vide ou supprimer l'élément
+    this.htmlImage.src = '';
+    this.htmlImage = null;
+    // Optionnel : marquer le cookie comme supprimé
+    this.type = null;
+  }
+
+  deplacer(trou) {
+    // Mettre à jour les coordonnées du cookie
+    this.ligne += trou;
+    // Mettre à jour les attributs de données de l'image HTML
+    if (this.htmlImage) {
+      this.htmlImage.dataset.ligne = this.ligne;
+    }
+  }
+
+  setAlignement(alignement) {
+    this.alignement = alignement;
+  }
+  
 }

@@ -1,4 +1,4 @@
-import Grille from "./Grille.js";
+import Grille from "./grille.js";
 
 // 1 On définit une sorte de "programme principal"
 // le point d'entrée du code qui sera appelée dès que la
@@ -13,6 +13,12 @@ function init() {
   // appelée quand la page et ses ressources sont prêtes.
   // On dit aussi que le DOM est ready (en fait un peu plus...)
 
-  grille = new Grille(9, 9);
+  grille = new Grille(9, 9, 6);
+  grille.verifierGrille();
   grille.showCookies();
+  document.getElementById('alignements').addEventListener('click', () => {
+    grille.highlightAlignments();
+  });
 }
+
+
