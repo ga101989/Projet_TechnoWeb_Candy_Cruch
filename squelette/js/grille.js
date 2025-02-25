@@ -63,7 +63,7 @@ export default class Grille {
             let cookie1 = this.TabCookieEnCours[0];
             let cookie2 = this.TabCookieEnCours[1];
   
-            this.essayerDeSwapper(cookie1, cookie2);
+            this.TryDeSwipe(cookie1, cookie2);
         }
 
       };
@@ -93,7 +93,7 @@ export default class Grille {
         event.target.classList.add("grilleDragOver");
 
       }
-      
+
 
       // on enlève la classe CSS quand on sort de l'image
       img.ondragleave = (event) => {
