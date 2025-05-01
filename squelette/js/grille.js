@@ -15,13 +15,22 @@ export default class Grille {
     this.difficulte = difficulte;
     this.score = 0;
     this.TabCookieEnCours = [];
-
+    this.niveau = 1;
     this.tabCookies = this.remplirTableauDeCookies(difficulte);
   }
 
   majScore(points) {
     this.score += points;
     document.querySelector("#infos div:nth-child(2)").textContent = `Score : ${this.score}`;
+
+    if (this.score >= this.seuilScore()) {
+      this.NiveauSuivant();
+    }
+      
+  }
+
+  majNiveau() {
+    document.querySelector("#infos div:nth-child(3)").textContent = `Niveau : ${this.niveau}`;
   }
 
   /**
@@ -443,7 +452,26 @@ export default class Grille {
       this.TryDeSwipe(cookie1, cookie2);
     };
   }
+
+  seuilScore() {
+    return this.niveau * 1000; // Exemple : niveau 1 → 1000, niveau 2 → 2000...
+  }
+
+
+  NiveauSuivant() {
+    this.niveau++;
+    this.score = 0;
+    this.majScore(0);
+    this.majNiveau();
   
+    //difficulté
+    this.difficulte = Math.min(this.difficulte + 1, 5);
+  
+    //nouvelle grille
+    this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
+    this.showCookies();
+    this.supprimeEnCascade();
+  }
 
 
 }
