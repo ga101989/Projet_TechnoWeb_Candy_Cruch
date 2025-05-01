@@ -51,9 +51,10 @@ export default class Grille {
       // on récupère le cookie correspondant à cette case
       let cookie = this.tabCookies[ligne][colonne];
       // on récupère l'image correspondante
+      if (!cookie || !cookie.htmlImage) return;
       let img = cookie.htmlImage;
 
-
+      
       img.onclick = (event) => {
 
         let cookieImage = event.target;
@@ -116,8 +117,12 @@ export default class Grille {
         let data = JSON.parse(event.dataTransfer.getData("text"));
 
         let cookieImage = event.target;
+        let l = parseInt(cookieImage.dataset.ligne);
+        let c = parseInt(cookieImage.dataset.colonne);
+/** 
         let l = cookieImage.dataset.ligne;
         let c = cookieImage.dataset.colonne;
+*/
 
 //TODO changer
 
@@ -167,6 +172,7 @@ export default class Grille {
     if(this.swapLesCookies(cookie1, cookie2)) {
       this.TabCookieEnCours = [];
       cookie2.deselectionnee();
+      cookie1.deselectionnee();
 
       //this.detectionAlignements();
       //this.supprimerAlignements();
@@ -293,8 +299,8 @@ export default class Grille {
     for (let ligne = 0; ligne < this.l; ligne++) {
       for (let colonne = 0; colonne < this.c; colonne++) { // on repère tous les cookies qui sont alignés
         if (this.tabCookies[ligne][colonne].alignement) {
+
           this.tabCookies[ligne][colonne].supprimerCookie(); // on supprime l'image du cookie
-          //this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
           this.tabCookies[ligne][colonne] = null;
           nbCases++;// pour le nbre de cases à supprimer
         }
@@ -373,6 +379,7 @@ export default class Grille {
   
         const cookie = this.tabCookies[ligne][colonne];
         if (cookie && cookie.htmlImage) {
+          this.ajouterListenersSurImage(cookie.htmlImage);
           div.appendChild(cookie.htmlImage);
         }
       }
@@ -385,4 +392,58 @@ export default class Grille {
     // this.supprimerAlignements(alignements);
     // this.faireDescendreCookies();
   }
+
+
+  ajouterListenersSurImage(img) {
+    img.onclick = (event) => {
+      if (this.enCoursDeCascade) return;
+  
+      let cookieImage = event.target;
+      let cookie = this.getCookieFromImage(cookieImage);
+  
+      if (!this.TabCookieEnCours.includes(cookie)) {
+        this.TabCookieEnCours.push(cookie);
+        cookie.selectionnee();
+      }
+      if (this.TabCookieEnCours.length == 2) {
+        let cookie1 = this.TabCookieEnCours[0];
+        let cookie2 = this.TabCookieEnCours[1];
+        this.TryDeSwipe(cookie1, cookie2);
+      }
+    };
+  
+    img.ondragstart = (event) => {
+      if (this.enCoursDeCascade) return;
+  
+      let cookieImage = event.target;
+      event.dataTransfer.setData("text", JSON.stringify(cookieImage.dataset));
+    };
+  
+    img.ondragover = (event) => event.preventDefault();
+  
+    img.ondragenter = (event) => {
+      event.target.classList.add("grilleDragOver");
+    };
+  
+    img.ondragleave = (event) => {
+      event.target.classList.remove("grilleDragOver");
+    };
+  
+    img.ondrop = (event) => {
+      event.target.classList.remove("grilleDragOver");
+      let data = JSON.parse(event.dataTransfer.getData("text"));
+  
+      let cookieImage = event.target;
+      let l = parseInt(cookieImage.dataset.ligne);
+      let c = parseInt(cookieImage.dataset.colonne);
+  
+      let cookie1 = this.getCookieFromLC(parseInt(data.ligne), parseInt(data.colonne));
+      let cookie2 = this.getCookieFromImage(cookieImage);
+  
+      this.TryDeSwipe(cookie1, cookie2);
+    };
+  }
+  
+
+
 }
