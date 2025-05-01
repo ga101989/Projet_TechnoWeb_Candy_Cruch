@@ -16,6 +16,10 @@ function init() {
   grille = new Grille(9, 9, 6);
   //grille.verifierGrille();
   grille.showCookies();
+
+  // Nettoyage initial de la grille
+  setTimeout(nettoyerGrilleInit, 100);
+  
   
   document.getElementById('alignements').addEventListener('click', () => {
     grille.verifierGrille(); 
@@ -24,3 +28,19 @@ function init() {
 }
 
 
+function nettoyerGrilleInit() {
+
+  grille.detectionAlignements();
+
+  let aSupprimer = grille.tabCookies.flat().some(cookie => cookie.alignement);
+
+  while (aSupprimer) {
+    grille.supprimerAlignements();
+    setTimeout(() => {
+      grille.faireDescendreCookies();
+    }, 1000);
+    //grille.faireDescendreCookies();
+    //grille.detectionAlignements();
+    aSupprimer = grille.tabCookies.flat().some(cookie => cookie.alignement);
+  }
+}

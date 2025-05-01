@@ -167,8 +167,6 @@ export default class Grille {
 
       this.supprimerAlignements();
 
-      this.faireDescendreCookies();
-
     }
     else{
       console.log("Impossible de swap les cookies");
@@ -177,6 +175,20 @@ export default class Grille {
 
     }
 
+  }
+
+  rajoutDeCookies() {
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        if (this.tabCookies[ligne][colonne] === null) {
+          const type = Math.floor(Math.random() * this.difficulte);
+          const nouveauCookie = new Cookie(type, ligne, colonne);
+          this.tabCookies[ligne][colonne] = nouveauCookie;
+        }
+      }
+    }
+  
+    this.reafficherCookies();
   }
 
 
@@ -283,6 +295,10 @@ export default class Grille {
         }
       }
     }
+
+    this.faireDescendreCookies();
+    this.rajoutDeCookies();
+
   }
 
   highlightAlignments() {
