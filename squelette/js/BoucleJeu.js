@@ -29,11 +29,11 @@ function init() {
 
 
 function nettoyerGrilleInit() {
-
+  /** 
   grille.detectionAlignements();
 
   let aSupprimer = grille.tabCookies.flat().some(cookie => cookie.alignement);
-
+  
   while (aSupprimer) {
     grille.supprimerAlignements();
     setTimeout(() => {
@@ -42,5 +42,9 @@ function nettoyerGrilleInit() {
     //grille.faireDescendreCookies();
     //grille.detectionAlignements();
     aSupprimer = grille.tabCookies.flat().some(cookie => cookie.alignement);
+    document.querySelector("#infos div:nth-child(2)").textContent = "Score : 0";
   }
+  */
+  grille.supprimeEnCascade();
+  document.querySelector("#infos div:nth-child(2)").textContent = "Score : 0";
 }

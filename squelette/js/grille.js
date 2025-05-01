@@ -13,10 +13,15 @@ export default class Grille {
     this.c = c;
     this.l = l;
     this.difficulte = difficulte;
-
+    this.score = 0;
     this.TabCookieEnCours = [];
 
     this.tabCookies = this.remplirTableauDeCookies(difficulte);
+  }
+
+  majScore(points) {
+    this.score += points;
+    document.querySelector("#infos div:nth-child(2)").textContent = `Score : ${this.score}`;
   }
 
   /**
@@ -163,16 +168,17 @@ export default class Grille {
       this.TabCookieEnCours = [];
       cookie2.deselectionnee();
 
-      this.detectionAlignements();
+      //this.detectionAlignements();
+      //this.supprimerAlignements();
 
-      this.supprimerAlignements();
+      this.supprimeEnCascade();
 
     }
     else{
       console.log("Impossible de swap les cookies");
       this.TabCookieEnCours.splice(1, 1);
       cookie2.deselectionnee();
-
+      this.TabCookieEnCours = [];
     }
 
   }
@@ -282,24 +288,47 @@ export default class Grille {
   }
 
   // Méthode qui permet de supprimer les cookies alignés
-  supprimerAlignements() { 
+  supprimerAlignements() {
+    let nbCases = 0;
     for (let ligne = 0; ligne < this.l; ligne++) {
       for (let colonne = 0; colonne < this.c; colonne++) { // on repère tous les cookies qui sont alignés
         if (this.tabCookies[ligne][colonne].alignement) {
           this.tabCookies[ligne][colonne].supprimerCookie(); // on supprime l'image du cookie
-
-
-
           //this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
           this.tabCookies[ligne][colonne] = null;
+          nbCases++;// pour le nbre de cases à supprimer
         }
       }
+    }
+
+    if (nbCases > 0) {
+      this.majScore(nbCases * 20);
     }
 
     this.faireDescendreCookies();
     this.rajoutDeCookies();
 
   }
+
+
+  supprimeEnCascade() {
+    this.detectionAlignements();
+  
+    let aSupprimer = this.tabCookies.flat().some(c => c?.alignement);
+  
+    if (aSupprimer) {
+      setTimeout(() => {
+        this.supprimerAlignements();
+  
+        setTimeout(() => {
+          this.supprimeEnCascade();
+        }, 200);
+      }, 200);
+    }
+  }
+  
+
+
 
   highlightAlignments() {
     for (let ligne = 0; ligne < this.l; ligne++) {
