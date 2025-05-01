@@ -162,6 +162,13 @@ export default class Grille {
     if(this.swapLesCookies(cookie1, cookie2)) {
       this.TabCookieEnCours = [];
       cookie2.deselectionnee();
+
+      this.detectionAlignements();
+
+      this.supprimerAlignements();
+
+      this.faireDescendreCookies();
+
     }
     else{
       console.log("Impossible de swap les cookies");
@@ -170,8 +177,8 @@ export default class Grille {
 
     }
 
-
   }
+
 
   /**
    * Initialisation du niveau de départ. Le paramètre est le nombre de cookies différents
@@ -267,7 +274,11 @@ export default class Grille {
     for (let ligne = 0; ligne < this.l; ligne++) {
       for (let colonne = 0; colonne < this.c; colonne++) { // on repère tous les cookies qui sont alignés
         if (this.tabCookies[ligne][colonne].alignement) {
-          this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
+          this.tabCookies[ligne][colonne].supprimerCookie(); // on supprime l'image du cookie
+
+
+
+          //this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
           this.tabCookies[ligne][colonne] = null;
         }
       }
@@ -294,10 +305,35 @@ export default class Grille {
           trou++;
         } else if (trou > 0) {
           this.tabCookies[ligne][colonne].deplacer(trou);
+
+          this.tabCookies[ligne + trou][colonne] = this.tabCookies[ligne][colonne];
+        this.tabCookies[ligne][colonne] = null;
+        }
+      }
+    }
+
+    // Remplir les cases vides avec de nouveaux cookies
+    this.reafficherCookies();
+
+  }
+
+  reafficherCookies() {
+    let caseDivs = document.querySelectorAll("#grille div");
+  
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        const index = ligne * this.c + colonne;
+        const div = caseDivs[index];
+        div.innerHTML = "";
+  
+        const cookie = this.tabCookies[ligne][colonne];
+        if (cookie && cookie.htmlImage) {
+          div.appendChild(cookie.htmlImage);
         }
       }
     }
   }
+  
 
   verifierGrille(){
     this.detectionAlignements();
