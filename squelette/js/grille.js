@@ -1,4 +1,4 @@
-import Cookie from "./Cookie.js";
+import Cookie from "./cookie.js";
 import { create2DArray } from "./utils.js";
 
 /* Classe principale du jeu, c'est une grille de cookies. Le jeu se joue comme
@@ -9,13 +9,14 @@ export default class Grille {
    * @param {number} l nombre de lignes
    * @param {number} c nombre de colonnes
    */
-  constructor(l, c) {
+  constructor(l, c, difficulte) {
     this.c = c;
     this.l = l;
+    this.difficulte = difficulte;
 
     this.TabCookieEnCours = [];
 
-    this.tabcookies = this.remplirTableauDeCookies(6)
+    this.tabCookies = this.remplirTableauDeCookies(difficulte);
   }
 
   /**
@@ -43,7 +44,7 @@ export default class Grille {
       console.log("On remplit le div index=" + index + " l=" + ligne + " col=" + colonne);
 
       // on récupère le cookie correspondant à cette case
-      let cookie = this.tabcookies[ligne][colonne];
+      let cookie = this.tabCookies[ligne][colonne];
       // on récupère l'image correspondante
       let img = cookie.htmlImage;
 
@@ -110,6 +111,13 @@ export default class Grille {
         let data = JSON.parse(event.dataTransfer.getData("text"));
 
         let cookieImage = event.target;
+        let l = cookieImage.dataset.ligne;
+        let c = cookieImage.dataset.colonne;
+
+//TODO changer
+
+        let t = this.tabCookies[l][c].type;
+        console.log(`dragstart sur cookie : t = ${t} l = ${l} c = ${c}`); 
 
         let cookie1 = this.getCookieFromLC(data.ligne, data.colonne);
         let cookie2 = this.getCookieFromImage(cookieImage);
@@ -132,7 +140,7 @@ export default class Grille {
   }
 
   getCookieFromLC(ligne, colonne) {
-    return this.tabcookies[ligne][colonne];
+    return this.tabCookies[ligne][colonne];
   }
 
 
@@ -185,7 +193,7 @@ export default class Grille {
     // chaque case avec un autre tableau vide
     // Faites ctrl-click sur la fonction create2DArray
     // pour voir comment elle fonctionne
-    let tab = create2DArray(9);
+    let tab = create2DArray(this.l);
 
     // remplir
     for (let l = 0; l < this.l; l++) {
@@ -199,5 +207,101 @@ export default class Grille {
     }
 
     return tab;
+  }
+
+  detectionAlignements() {
+    // Réinitialiser l'attribut alignement de tous les cookies
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        this.tabCookies[ligne][colonne].alignement = false;
+      }
+    }
+
+    // Vérification des alignements horizontaux
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      let compte = 1;
+      for (let colonne = 0; colonne < this.c - 1; colonne++) {
+        if (this.tabCookies[ligne][colonne].type === this.tabCookies[ligne][colonne + 1].type) {
+          compte++;
+        } else {
+          if (compte >= 3) {
+            for (let k = 0; k < compte; k++) {
+              this.tabCookies[ligne][colonne - k].alignement = true;
+            }
+          }
+          compte = 1;
+        }
+      }
+      if (compte >= 3) {
+        for (let k = 0; k < compte; k++) {
+          this.tabCookies[ligne][this.c - 1 - k].alignement = true;
+        }
+      }
+    }
+
+    // Vérification des alignements verticaux
+    for (let colonne = 0; colonne < this.c; colonne++) {
+      let compte = 1;
+      for (let ligne = 0; ligne < this.l - 1; ligne++) {
+        if (this.tabCookies[ligne][colonne].type === this.tabCookies[ligne + 1][colonne].type) {
+          compte++;
+        } else {
+          if (compte >= 3) {
+            for (let k = 0; k < compte; k++) {
+              this.tabCookies[ligne - k][colonne].alignement = true;
+            }
+          }
+          compte = 1;
+        }
+      }
+      if (compte >= 3) {
+        for (let k = 0; k < compte; k++) {
+          this.tabCookies[this.l - 1 - k][colonne].alignement = true;
+        }
+      }
+    }
+  }
+
+  // Méthode qui permet de supprimer les cookies alignés
+  supprimerAlignements() { 
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) { // on repère tous les cookies qui sont alignés
+        if (this.tabCookies[ligne][colonne].alignement) {
+          this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
+          this.tabCookies[ligne][colonne] = null;
+        }
+      }
+    }
+  }
+
+  highlightAlignments() {
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        let cookie = this.tabCookies[ligne][colonne];
+        if (cookie && cookie.alignement) {
+          cookie.htmlImage.src = Cookie.urlsImagesSurlignees[cookie.type];
+        }
+      }
+    }
+  }
+
+  // Méthode qui permet de faire descendre les cookies
+  faireDescendreCookies() {
+    for (let colonne = 0; colonne < this.c; colonne++) {
+      let trou = 0;
+      for (let ligne = this.l - 1; ligne >= 0; ligne--) {
+        if (this.tabCookies[ligne][colonne] === null) {
+          trou++;
+        } else if (trou > 0) {
+          this.tabCookies[ligne][colonne].deplacer(trou);
+        }
+      }
+    }
+  }
+
+  verifierGrille(){
+    this.detectionAlignements();
+    // this.supprimerAlignements(alignements);
+    // this.faireDescendreCookies();
   }
 }
