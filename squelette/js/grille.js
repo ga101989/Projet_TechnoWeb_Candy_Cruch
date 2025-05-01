@@ -471,6 +471,19 @@ export default class Grille {
     this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
     this.showCookies();
     this.supprimeEnCascade();
+
+    this.NiveauSuivantAffichage();
+    //alert(`Bravo ! Vous passez au niveau ${this.niveau}`);
+
+  }
+
+  NiveauSuivantAffichage() {
+    const overlay = document.getElementById("overlay-niveau");
+    overlay.textContent = `Niveau ${this.niveau}`;
+    overlay.classList.add("visible");
+    setTimeout(() => {
+      overlay.classList.remove("visible");
+    }, 1500);
   }
 
 
