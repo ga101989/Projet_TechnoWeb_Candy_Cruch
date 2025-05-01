@@ -14,10 +14,11 @@ function init() {
   // On dit aussi que le DOM est ready (en fait un peu plus...)
 
   grille = new Grille(9, 9, 6);
-  grille.verifierGrille();
+  //grille.verifierGrille();
   grille.showCookies();
   
   document.getElementById('alignements').addEventListener('click', () => {
+    grille.verifierGrille(); 
     grille.highlightAlignments();
   });
 }
