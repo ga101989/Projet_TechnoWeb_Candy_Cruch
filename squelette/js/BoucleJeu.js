@@ -45,6 +45,8 @@ function nettoyerGrilleInit() {
     document.querySelector("#infos div:nth-child(2)").textContent = "Score : 0";
   }
   */
-  grille.supprimeEnCascade();
-  document.querySelector("#infos div:nth-child(2)").textContent = "Score : 0";
+  grille.supprimeEnCascade(() => {
+    grille.score = 0;
+    grille.majScore(0); // met à jour l'affichage sans ajouter de points
+  });
 }

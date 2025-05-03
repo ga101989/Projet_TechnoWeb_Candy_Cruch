@@ -326,7 +326,7 @@ export default class Grille {
   }
 
 
-  supprimeEnCascade() {
+  supprimeEnCascade(callback) {
     this.detectionAlignements();
   
     let aSupprimer = this.tabCookies.flat().some(c => c?.alignement);
@@ -336,11 +336,14 @@ export default class Grille {
         this.supprimerAlignements();
   
         setTimeout(() => {
-          this.supprimeEnCascade();
+          this.supprimeEnCascade(callback);
         }, 200);
       }, 200);
+    } else {
+      if (callback) callback();
     }
   }
+  
   
 
 
@@ -460,8 +463,6 @@ export default class Grille {
 
   NiveauSuivant() {
     this.niveau++;
-    this.score = 0;
-    this.majScore(0);
     this.majNiveau();
   
     //difficulté
@@ -470,11 +471,12 @@ export default class Grille {
     //nouvelle grille
     this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
     this.showCookies();
-    this.supprimeEnCascade();
-
+    this.supprimeEnCascade(() => {
+      this.score = 0;
+      this.majScore(0);
+    });
     this.NiveauSuivantAffichage();
     //alert(`Bravo ! Vous passez au niveau ${this.niveau}`);
-
   }
 
   NiveauSuivantAffichage() {
