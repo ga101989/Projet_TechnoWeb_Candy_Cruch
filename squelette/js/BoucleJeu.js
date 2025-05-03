@@ -7,6 +7,9 @@ import Grille from "./grille.js";
 window.onload = init;
 
 let grille;
+let temps = 0;
+let intervalId;
+
 
 function init() {
   console.log("Page et ressources prêtes à l'emploi");
@@ -20,6 +23,7 @@ function init() {
   // Nettoyage initial de la grille
   setTimeout(nettoyerGrilleInit, 100);
   
+  demarrerChronometre();
   
   document.getElementById('alignements').addEventListener('click', () => {
     grille.verifierGrille(); 
@@ -27,6 +31,12 @@ function init() {
   });
 }
 
+function demarrerChronometre() {
+  intervalId = setInterval(() => {
+    temps++;
+    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${temps}`;
+  }, 1000);
+}
 
 function nettoyerGrilleInit() {
   /** 
@@ -50,3 +60,5 @@ function nettoyerGrilleInit() {
     grille.majScore(0); // met à jour l'affichage sans ajouter de points
   });
 }
+
+
