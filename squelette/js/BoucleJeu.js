@@ -7,8 +7,10 @@ import Grille from "./grille.js";
 window.onload = init;
 
 let grille;
-let temps = 0;
+let temps = 60;
 let intervalId;
+
+let tempsParNiveau = 60;
 
 
 function init() {
@@ -23,11 +25,42 @@ function init() {
   // Nettoyage initial de la grille
   setTimeout(nettoyerGrilleInit, 100);
   
-  demarrerChronometre();
+  //demarrerChronometre();
+  CompteARebours();
   
   document.getElementById('alignements').addEventListener('click', () => {
     grille.verifierGrille(); 
     grille.highlightAlignments();
+  });
+}
+
+function CompteARebours() {
+  intervalId = setInterval(() => {
+    temps--;
+    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${temps}`;
+    
+    if (temps <= 0) {
+      clearInterval(intervalId);
+      FinDuJeu();
+    }
+  }, 1000);
+}
+
+function FinDuJeu() {
+
+  const overlay = document.getElementById("overlay-niveau");
+  overlay.textContent = "Temps écoulé ! Partie terminée.";
+  overlay.classList.add("visible");
+
+  setTimeout(() => {
+    overlay.classList.remove("visible");
+  }, 5000);
+
+  grille.TabCookieEnCours = [];
+  document.querySelectorAll("#grille img").forEach(img => {
+    img.onclick = null;
+    img.ondragstart = null;
+    img.ondrop = null;
   });
 }
 
