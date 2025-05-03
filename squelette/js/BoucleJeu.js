@@ -15,7 +15,7 @@ window.onload = () => {
 };
 
 let grille;
-let temps = 60;
+let temps = 30;
 let intervalId;
 
 let tempsParNiveau = 60;
@@ -40,6 +40,8 @@ function init() {
     grille.verifierGrille(); 
     grille.highlightAlignments();
   });
+
+  
 }
 
 function CompteARebours() {
@@ -57,12 +59,13 @@ function CompteARebours() {
 function FinDuJeu() {
 
   const overlay = document.getElementById("overlay-niveau");
-  overlay.innerHTML = `Temps écoulé ! Partie terminée.`;
+  overlay.innerHTML = `
+    <div>
+      Temps écoulé ! Partie terminée.
+      <br><br>
+      <button id="btn-rejouer" class="styled-button">Rejouer</button>
+    </div>`;
   overlay.classList.add("visible");
-
-  setTimeout(() => {
-    overlay.classList.remove("visible");
-  }, 5000);
 
   grille.TabCookieEnCours = [];
   document.querySelectorAll("#grille img").forEach(img => {
@@ -70,6 +73,24 @@ function FinDuJeu() {
     img.ondragstart = null;
     img.ondrop = null;
   });
+
+  document.querySelectorAll("#grille div").forEach(div => {
+    div.innerHTML = "";
+  });
+
+  setTimeout(() => {
+    const btnRejouer = document.getElementById("btn-rejouer");
+    if (btnRejouer) {
+      btnRejouer.addEventListener("click", () => {
+        overlay.classList.remove("visible");
+
+        clearInterval(intervalId);
+        temps = tempsParNiveau;
+        init();
+        CompteARebours();
+      });
+    }
+  }, 100);
 
 
 }
