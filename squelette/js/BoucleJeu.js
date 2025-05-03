@@ -4,7 +4,15 @@ import Grille from "./grille.js";
 // le point d'entrée du code qui sera appelée dès que la
 // page ET SES RESSOURCES sont chargées
 
-window.onload = init;
+//window.onload = init;
+window.onload = () => {
+  document.getElementById("overlay-start").classList.add("visible");
+
+  document.getElementById("btn-jouer").addEventListener("click", () => {
+    document.getElementById("overlay-start").classList.remove("visible");
+    init();
+  });
+};
 
 let grille;
 let temps = 60;
@@ -49,7 +57,7 @@ function CompteARebours() {
 function FinDuJeu() {
 
   const overlay = document.getElementById("overlay-niveau");
-  overlay.textContent = "Temps écoulé ! Partie terminée.";
+  overlay.innerHTML = `Temps écoulé ! Partie terminée.`;
   overlay.classList.add("visible");
 
   setTimeout(() => {
@@ -62,6 +70,8 @@ function FinDuJeu() {
     img.ondragstart = null;
     img.ondrop = null;
   });
+
+
 }
 
 function demarrerChronometre() {

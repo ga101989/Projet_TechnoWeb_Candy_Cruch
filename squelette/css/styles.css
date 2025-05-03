@@ -72,7 +72,7 @@ body {
 }
 
 
-#overlay-niveau {
+#overlay-start, #overlay-niveau {
     position: absolute;
     top: 0;
     left: 0;
@@ -90,7 +90,14 @@ body {
     z-index: 10;
   }
   
-  #overlay-niveau.visible {
+  #overlay-start.visible, #overlay-niveau.visible {
     opacity: 1;
     pointer-events: auto;
   }
+
+  #overlay-start button,
+  #overlay-niveau button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+}
