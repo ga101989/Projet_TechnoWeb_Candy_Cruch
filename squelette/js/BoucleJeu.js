@@ -83,7 +83,7 @@ function FinDuJeu() {
     if (btnRejouer) {
       btnRejouer.addEventListener("click", () => {
         overlay.classList.remove("visible");
-
+        
         clearInterval(intervalId);
         temps = tempsParNiveau;
         init();
@@ -124,5 +124,3 @@ function nettoyerGrilleInit() {
     grille.majScore(0); // met à jour l'affichage sans ajouter de points
   });
 }
-
-

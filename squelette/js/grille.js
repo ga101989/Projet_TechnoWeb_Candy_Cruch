@@ -1,6 +1,7 @@
 import Cookie from "./cookie.js";
 import { create2DArray } from "./utils.js";
 
+
 /* Classe principale du jeu, c'est une grille de cookies. Le jeu se joue comme
 Candy Crush Saga etc... c'est un match-3 game... */
 export default class Grille {
@@ -457,7 +458,7 @@ export default class Grille {
   }
 
   seuilScore() {
-    return this.niveau * 1000; // Exemple : niveau 1 → 1000, niveau 2 → 2000...
+    return this.niveau * 1000;
   }
 
 
@@ -466,7 +467,7 @@ export default class Grille {
     this.majNiveau();
   
     //difficulté
-    this.difficulte = Math.min(this.difficulte + 1, 5);
+    this.difficulte = Math.min(this.difficulte + 1, 5);//
   
     //nouvelle grille
     this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
