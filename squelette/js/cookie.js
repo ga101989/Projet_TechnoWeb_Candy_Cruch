@@ -36,11 +36,6 @@ export default class Cookie {
     img.src = url;
     img.width = 80;
     img.height = 80;
-    // pour pouvoir récupérer la ligne et la colonne
-    // quand on cliquera sur une image et donc à partir
-    // de cette ligne et colonne on pourra récupérer le cookie
-    // On utilise la dataset API du DOM, qui permet de stocker
-    // des données arbitraires dans un élément HTML
     img.dataset.ligne = ligne;
     img.dataset.colonne = colonne;
 
@@ -49,17 +44,12 @@ export default class Cookie {
   }
 
   isSelectionnee() {
-    // on regarde si l'image a la classe CSS "cookies-selected"
-    // A FAIRE
+    // On va vérifier si l'image a la classe CSS "cookies-selected"
     return this.htmlImage.classList.contains("cookies-selected");
   }
 
   selectionnee() {
-    // on change l'image et la classe CSS
-    // On doit mettre à la place de l'URL classique, l'URL de l'image
-    // surlignée correspondant au type de cookie. Voir la propriété
-    // statique de la classe Cookie, urlsImagesSurlignees
-    // A FAIRE
+
     this.htmlImage.src = Cookie.urlsImagesSurlignees[this.type];
     // On va ajouter la classe CSS "cookies-selected" à
     // l'image du cookie

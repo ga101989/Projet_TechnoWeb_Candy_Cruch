@@ -58,16 +58,13 @@ export default class Grille {
   
 
   FinDuJeu() {
-
     const overlay = document.getElementById("overlay-niveau");
     const boutonRejouer = document.getElementById("btn-rejouer-home");
     boutonRejouer.classList.add("visible");
     overlay.innerHTML = `
-      <div>
-        Temps écoulé ! Partie terminée.
-        <br><br>
+        <p>Temps écoulé ! Partie terminée.</p>
         <button id="btn-rejouer" class="styled-button">Rejouer</button>
-      </div>`;
+      `;
     overlay.classList.add("visible");
 
     this.TabCookieEnCours = [];
@@ -220,12 +217,6 @@ export default class Grille {
         let cookieImage = event.target;
         let l = parseInt(cookieImage.dataset.ligne);
         let c = parseInt(cookieImage.dataset.colonne);
-/** 
-        let l = cookieImage.dataset.ligne;
-        let c = cookieImage.dataset.colonne;
-*/
-
-//TODO changer
 
         let t = this.tabCookies[l][c].type;
         console.log(`dragstart sur cookie : t = ${t} l = ${l} c = ${c}`); 
@@ -236,7 +227,6 @@ export default class Grille {
         // on swappe les cookies
         this.TryDeSwipe(cookie1, cookie2);
       }
-
 
       // on affiche l'image dans le div pour la faire apparaitre à l'écran.
       div.appendChild(img);
@@ -274,9 +264,6 @@ export default class Grille {
       this.TabCookieEnCours = [];
       cookie2.deselectionnee();
       cookie1.deselectionnee();
-
-      //this.detectionAlignements();
-      //this.supprimerAlignements();
 
       this.supprimeEnCascade();
 
@@ -491,13 +478,6 @@ export default class Grille {
   }
   
 
-  verifierGrille(){
-    this.detectionAlignements();
-    // this.supprimerAlignements(alignements);
-    // this.faireDescendreCookies();
-  }
-
-
   ajouterListenersSurImage(img) {
     img.onclick = (event) => {
       if (this.enCoursDeCascade) return;
@@ -573,7 +553,7 @@ export default class Grille {
 
   NiveauSuivantAffichage() {
     const overlay = document.getElementById("overlay-niveau");
-    overlay.textContent = `Niveau ${this.niveau}`;
+    overlay.innerHTML = `<p>Niveau ${this.niveau}</p>`;
     overlay.classList.add("visible");
     setTimeout(() => {
       overlay.classList.remove("visible");
