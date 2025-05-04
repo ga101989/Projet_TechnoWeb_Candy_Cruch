@@ -18,6 +18,9 @@ export default class Grille {
     this.TabCookieEnCours = [];
     this.niveau = 1;
     this.tabCookies = this.remplirTableauDeCookies(difficulte);
+    this.temps = 25;
+    this.intervalId = null;
+    this.tempsParNiveau = 25;
   }
 
   majScore(points) {
@@ -33,6 +36,74 @@ export default class Grille {
   majNiveau() {
     document.querySelector("#infos div:nth-child(3)").textContent = `Niveau : ${this.niveau}`;
   }
+
+  CompteARebours() {
+    clearInterval(this.intervalId);
+    this.temps = this.tempsParNiveau;
+  
+    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${this.temps}`;
+  
+    this.intervalId = setInterval(() => {
+      this.temps--;
+      document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${this.temps}`;
+  
+      if (this.temps <= 0) {
+        clearInterval(this.intervalId);
+        this.FinDuJeu();
+      }
+    }, 1000);
+  }
+  
+
+  FinDuJeu() {
+
+    const overlay = document.getElementById("overlay-niveau");
+    overlay.innerHTML = `
+      <div>
+        Temps écoulé ! Partie terminée.
+        <br><br>
+        <button id="btn-rejouer" class="styled-button">Rejouer</button>
+      </div>`;
+    overlay.classList.add("visible");
+
+    this.TabCookieEnCours = [];
+    document.querySelectorAll("#grille img").forEach(img => {
+      img.onclick = null;
+      img.ondragstart = null;
+      img.ondrop = null;
+    });
+  
+    document.querySelectorAll("#grille div").forEach(div => {
+      div.innerHTML = "";
+    });
+  
+    document.getElementById("btn-rejouer").addEventListener("click", () => {
+      overlay.classList.remove("visible");
+      this.rejouer();
+    });
+
+    setTimeout(() => {
+      overlay.classList.remove("visible");
+    }, 5000);
+  
+  }
+
+  rejouer() {
+    this.score = 0;
+    this.niveau = 1;
+    this.difficulte = 6;
+    this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
+    this.majScore(0);
+    this.majNiveau();
+    this.showCookies();
+  
+    setTimeout(() => {
+      this.supprimeEnCascade(() => {
+        this.CompteARebours();
+      });
+    }, 100);
+  }
+  
 
   /**
    * parcours la liste des divs de la grille et affiche les images des cookies
@@ -465,7 +536,7 @@ export default class Grille {
   NiveauSuivant() {
     this.niveau++;
     this.majNiveau();
-  
+    this.CompteARebours();
     //difficulté
     this.difficulte = Math.min(this.difficulte + 1, 5);//
   

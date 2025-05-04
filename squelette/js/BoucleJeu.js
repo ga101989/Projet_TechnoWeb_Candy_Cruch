@@ -27,6 +27,7 @@ function init() {
   // On dit aussi que le DOM est ready (en fait un peu plus...)
 
   grille = new Grille(9, 9, 6);
+  
   //grille.verifierGrille();
   grille.showCookies();
 
@@ -34,7 +35,7 @@ function init() {
   setTimeout(nettoyerGrilleInit, 100);
   
   //demarrerChronometre();
-  CompteARebours();
+  grille.CompteARebours();
   
   document.getElementById('alignements').addEventListener('click', () => {
     grille.verifierGrille(); 
@@ -44,6 +45,7 @@ function init() {
   
 }
 
+/*
 function CompteARebours() {
   intervalId = setInterval(() => {
     temps--;
@@ -94,7 +96,7 @@ function FinDuJeu() {
 
 
 }
-
+*/
 function demarrerChronometre() {
   intervalId = setInterval(() => {
     temps++;
