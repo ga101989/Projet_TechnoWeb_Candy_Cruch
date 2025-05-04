@@ -1,4 +1,6 @@
 import Grille from "./grille.js";
+export { afficherPodium };
+
 
 // 1 On définit une sorte de "programme principal"
 // le point d'entrée du code qui sera appelée dès que la
@@ -8,17 +10,32 @@ import Grille from "./grille.js";
 window.onload = () => {
   document.getElementById("overlay-start").classList.add("visible");
 
+  afficherPodium();
+
   document.getElementById("btn-jouer").addEventListener("click", () => {
+
+    const nom = document.getElementById("player-name").value.trim();
+
+    if (!nom) {
+      alert("Veuillez entrer un nom !");
+      return;
+    }
+
+    joueur.nom = nom;
+
     document.getElementById("overlay-start").classList.remove("visible");
     init();
+
+    
   });
 };
 
 let grille;
-let temps = 30;
-let intervalId;
-
-let tempsParNiveau = 60;
+let joueur = {
+  nom: "",
+  score: 0,
+  niveau: 1,
+};
 
 
 function init() {
@@ -26,7 +43,7 @@ function init() {
   // appelée quand la page et ses ressources sont prêtes.
   // On dit aussi que le DOM est ready (en fait un peu plus...)
 
-  grille = new Grille(9, 9, 6);
+  grille = new Grille(9, 9, 6, joueur);
   
   //grille.verifierGrille();
   grille.showCookies();
@@ -37,71 +54,14 @@ function init() {
   //demarrerChronometre();
   grille.CompteARebours();
   
+  /* 
   document.getElementById('alignements').addEventListener('click', () => {
     grille.verifierGrille(); 
     grille.highlightAlignments();
   });
+  */
 
   
-}
-
-/*
-function CompteARebours() {
-  intervalId = setInterval(() => {
-    temps--;
-    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${temps}`;
-    
-    if (temps <= 0) {
-      clearInterval(intervalId);
-      FinDuJeu();
-    }
-  }, 1000);
-}
-
-function FinDuJeu() {
-
-  const overlay = document.getElementById("overlay-niveau");
-  overlay.innerHTML = `
-    <div>
-      Temps écoulé ! Partie terminée.
-      <br><br>
-      <button id="btn-rejouer" class="styled-button">Rejouer</button>
-    </div>`;
-  overlay.classList.add("visible");
-
-  grille.TabCookieEnCours = [];
-  document.querySelectorAll("#grille img").forEach(img => {
-    img.onclick = null;
-    img.ondragstart = null;
-    img.ondrop = null;
-  });
-
-  document.querySelectorAll("#grille div").forEach(div => {
-    div.innerHTML = "";
-  });
-
-  setTimeout(() => {
-    const btnRejouer = document.getElementById("btn-rejouer");
-    if (btnRejouer) {
-      btnRejouer.addEventListener("click", () => {
-        overlay.classList.remove("visible");
-        
-        clearInterval(intervalId);
-        temps = tempsParNiveau;
-        init();
-        CompteARebours();
-      });
-    }
-  }, 100);
-
-
-}
-*/
-function demarrerChronometre() {
-  intervalId = setInterval(() => {
-    temps++;
-    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${temps}`;
-  }, 1000);
 }
 
 function nettoyerGrilleInit() {
@@ -126,3 +86,22 @@ function nettoyerGrilleInit() {
     grille.majScore(0); // met à jour l'affichage sans ajouter de points
   });
 }
+
+function afficherPodium() {
+  const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+
+  scores.sort((a, b) => (b.score-1000**a.niveau) - (a.score-1000**b.niveau));
+  const top3 = scores.slice(0, 3);
+  
+  while (top3.length < 3) {
+    top3.push({ nom: "-", score: "-", niveau: "-" });
+  }
+
+  let html = "<h2>🏆 Podium</h2>";
+  top3.forEach((entry, index) => {
+    html += `<div class="podium-entry">#${index + 1} — ${entry.nom} : (Niv ${entry.niveau}) ${entry.score} pts </div>`;
+  });
+
+  document.getElementById("podium").innerHTML = html;
+}
+

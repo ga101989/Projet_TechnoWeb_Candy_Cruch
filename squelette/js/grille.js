@@ -1,5 +1,6 @@
 import Cookie from "./cookie.js";
 import { create2DArray } from "./utils.js";
+import { afficherPodium } from "./BoucleJeu.js";
 
 
 /* Classe principale du jeu, c'est une grille de cookies. Le jeu se joue comme
@@ -10,7 +11,7 @@ export default class Grille {
    * @param {number} l nombre de lignes
    * @param {number} c nombre de colonnes
    */
-  constructor(l, c, difficulte) {
+  constructor(l, c, difficulte, joueur) {
     this.c = c;
     this.l = l;
     this.difficulte = difficulte;
@@ -21,6 +22,7 @@ export default class Grille {
     this.temps = 25;
     this.intervalId = null;
     this.tempsParNiveau = 25;
+    this.joueur = joueur;
   }
 
   majScore(points) {
@@ -76,17 +78,43 @@ export default class Grille {
     document.querySelectorAll("#grille div").forEach(div => {
       div.innerHTML = "";
     });
+
+    this.joueur.score = this.score;
+    this.joueur.niveau = this.niveau;
+    let scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+    scores.push({ nom: this.joueur.nom, score: this.joueur.score, niveau: this.joueur.niveau });
+    localStorage.setItem("scoresCandy", JSON.stringify(scores));
   
     document.getElementById("btn-rejouer").addEventListener("click", () => {
       overlay.classList.remove("visible");
       this.rejouer();
     });
 
+    //this.afficherPodium();
+    afficherPodium();
+
     setTimeout(() => {
       overlay.classList.remove("visible");
     }, 5000);
   
   }
+
+  /*
+  afficherPodium() {
+    const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+
+    scores.sort((a, b) => b.score - a.score);
+  
+    const top3 = scores.slice(0, 3);
+    let html = "<h2>🏆 Podium</h2>";
+    top3.forEach((entry, index) => {
+      html += `<p>#${index + 1} - ${entry.nom} : ${entry.score} points (Niv ${entry.niveau})</p>`;
+    });
+  
+    const overlay = document.getElementById("overlay-niveau");
+    overlay.innerHTML += `<br><div class="podium">${html}</div>`;
+  }*/
+  
 
   rejouer() {
     this.score = 0;

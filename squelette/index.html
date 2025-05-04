@@ -4,14 +4,17 @@
     <title>Candy Game</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/images/favi.png">
     <script src="lib/lodash.js"></script>
     <script type="module" src="js/BoucleJeu.js"></script>
 </head>
 
 <body>
     <!-- <H1>Candy Crush</H1> -->
-    <img src="./assets/images/Logo3.png" alt="Logo Candy Game" width=30% height=35%/>
-    <!-- <button class="alignements" id="alignements">Montrer alignements</button> -->
+    <div id="logoetimage">
+        <img src="./assets/images/Logo3.png" alt="Logo Candy Game" width=65% height=70%/>
+        <div id="podium"></div>
+    </div>
     <div id="main">
         <div id="infos">
             <div>Temps : 0</div>
@@ -105,8 +108,10 @@
     </div>
 
     <div id="overlay-start">
+        <label for="player-name">Entrez votre nom :</label><br>
+        <input type="text" id="player-name" placeholder="Votre prénom"><br><br>
         <button id="btn-jouer" class="styled-button">Jouer</button>
-      </div>
+    </div>
 
     <div id="overlay-niveau"></div>
     
