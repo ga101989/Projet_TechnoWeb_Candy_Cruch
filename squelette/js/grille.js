@@ -60,6 +60,8 @@ export default class Grille {
   FinDuJeu() {
 
     const overlay = document.getElementById("overlay-niveau");
+    const boutonRejouer = document.getElementById("btn-rejouer-home");
+    boutonRejouer.classList.add("visible");
     overlay.innerHTML = `
       <div>
         Temps écoulé ! Partie terminée.
@@ -90,7 +92,12 @@ export default class Grille {
       this.rejouer();
     });
 
-    //this.afficherPodium();
+    document.getElementById("btn-rejouer-home").addEventListener("click", () => {
+      overlay.classList.remove("visible");
+      boutonRejouer.classList.remove("visible");
+      this.rejouer();
+    });
+
     afficherPodium();
 
     setTimeout(() => {
@@ -99,21 +106,6 @@ export default class Grille {
   
   }
 
-  /*
-  afficherPodium() {
-    const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
-
-    scores.sort((a, b) => b.score - a.score);
-  
-    const top3 = scores.slice(0, 3);
-    let html = "<h2>🏆 Podium</h2>";
-    top3.forEach((entry, index) => {
-      html += `<p>#${index + 1} - ${entry.nom} : ${entry.score} points (Niv ${entry.niveau})</p>`;
-    });
-  
-    const overlay = document.getElementById("overlay-niveau");
-    overlay.innerHTML += `<br><div class="podium">${html}</div>`;
-  }*/
   
 
   rejouer() {

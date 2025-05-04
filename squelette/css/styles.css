@@ -165,3 +165,22 @@ body {
     align-items: center;
     margin: 20px 0;
 }
+
+#btn-rejouer-home {
+    margin-top: 20px; 
+    background-color: #ffc400;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background-color 0.3s;
+    opacity: 0;
+}
+
+#btn-rejouer-home.visible {
+    opacity: 1;
+    pointer-events: auto;
+}

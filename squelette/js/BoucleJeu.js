@@ -16,8 +16,19 @@ window.onload = () => {
 
     const nom = document.getElementById("player-name").value.trim();
 
+    const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+    const nomsExistants = scores.map(e => e.nom.toLowerCase());
+
     if (!nom) {
-      alert("Veuillez entrer un nom !");
+      document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
+      document.querySelector("#overlay-start input#player-name").style.color = "white";
+      alert("Veuillez entrer un nom.");
+      return;
+    } else if (nomsExistants.includes(nom.toLowerCase())) {
+      document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
+      document.querySelector("#overlay-start input#player-name").style.color = "white";
+      alert("Ce nom est déjà utilisé. Choisissez un autre.");
+      
       return;
     }
 
