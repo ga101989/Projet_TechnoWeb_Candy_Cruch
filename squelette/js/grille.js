@@ -27,7 +27,7 @@ export default class Grille {
 
   majScore(points) {
     this.score += points;
-    document.querySelector("#infos div:nth-child(2)").textContent = `Score : ${this.score}`;
+    document.querySelector("#infos div:nth-child(2)").textContent = `Score : ${this.score} / ${this.seuilScore()}`;
 
     if (this.score >= this.seuilScore()) {
       this.NiveauSuivant();

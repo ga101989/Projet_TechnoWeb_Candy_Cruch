@@ -8,8 +8,10 @@ body {
 }
 
 #main {
-    background-image: url("../assets/images/Background@2x.png");
-    border: 4px solid rgba(100, 100, 100);
+    /* background-image: url("../assets/images/Background@2x.png"); */
+    background-image: url("../assets/images/fond2.png");
+    border: 4px solid #704116;
+    border-radius: 15px;
     width: 800px;
 }
 
@@ -17,21 +19,23 @@ body {
     width: 800px;
     display: flex;
     justify-content: space-around;
+    background-color: #704116;
+    border-radius: 10px 10px 0 0;
 }
 
 #infos div {
     /* https://css-tricks.com/almanac/properties/j/justify-content/ */
     font-size: 40px;
-    color: rgb(133, 47, 47);
+    color: #ffc400;
+    font-weight: bold;
 }
 
 #grille {
     width: 800px;
     height: 720px;
-    background-color: rgba(100, 100, 100, 0.5);
-    border: 1px;
-    border: 1px solid #999;
-
+    background-color: rgba(40, 110, 138, 0.4);
+    border: 1px solid #704116;
+    border-radius: 0 0 15px 15px;
     display: grid;
     /* 1fr signifie "une fraction de la largeur de la grille", le repeat dit "9 cases" 
        égales à une fraction (1/9ème) Voir https://css-tricks.com/snippets/css/complete-guide-grid/ */
@@ -41,7 +45,7 @@ body {
 }
 
 #grille div {
-    border: 2px solid rgba(100, 100, 100, 0.5);
+    border: 2px solid #70411679;
     transition: 0.5s all;
 }
 
@@ -78,11 +82,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
     font-size: 3em;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     opacity: 0;
     pointer-events: none;
@@ -100,8 +104,12 @@ body {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 1em;
-}
-
+  }
+  
+  #overlay-start > * {
+    margin: 20px;
+    text-align: center;
+  }
 
 .styled-button {
     background-color: rgba(117, 202, 255, 0.779);;
@@ -132,10 +140,10 @@ body {
 
   #podium {
     max-width: 800px;
-    width: 50%;
+    width: 60%;
     margin: 10px auto;
     padding: 10px 15px;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #704116;
     border: 2px solid #5cbbfa;
     border-radius: 12px;
     text-align: center;
@@ -147,11 +155,13 @@ body {
     font-size: 1.4em;
     color: #ffc400;
     margin: 0 0 10px;
+    font-weight: bold;
 }
 
 .podium-entry {
     font-size: 1em;
-    color: white;
+    color: #704116;
+    font-weight: bold;
     margin: 4px 0;
     background-color: #ffc400;
     border-radius: 8px;
@@ -169,8 +179,8 @@ body {
 #btn-rejouer-home {
     margin-top: 20px; 
     background-color: #ffc400;
-    color: white;
-    border: none;
+    color: #704116;
+    border: 1px solid #704116;
     border-radius: 12px;
     padding: 15px 30px;
     font-size: 1.2em;
@@ -184,3 +194,4 @@ body {
     opacity: 1;
     pointer-events: auto;
 }
+
