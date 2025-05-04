@@ -19,9 +19,9 @@ export default class Grille {
     this.TabCookieEnCours = [];
     this.niveau = 1;
     this.tabCookies = this.remplirTableauDeCookies(difficulte);
-    this.temps = 25;
+    this.temps = 60;
     this.intervalId = null;
-    this.tempsParNiveau = 25;
+    this.tempsParNiveau = 60;
     this.joueur = joueur;
   }
 

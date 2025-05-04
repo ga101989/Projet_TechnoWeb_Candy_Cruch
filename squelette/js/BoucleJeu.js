@@ -6,6 +6,15 @@ window.onload = () => {
 
   afficherPodium();
 
+  document.getElementById("btn-regles").addEventListener("click", () => {
+    document.getElementById("overlay-regles").classList.add("active");
+  });
+  
+  document.getElementById("btn-fermer-regles").addEventListener("click", () => {
+    document.getElementById("overlay-regles").classList.remove("active");
+  });
+  
+
   document.getElementById("btn-jouer").addEventListener("click", () => {
 
     const nom = document.getElementById("player-name").value.trim();

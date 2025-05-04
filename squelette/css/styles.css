@@ -1,3 +1,7 @@
+* {
+    font-family: 'Fredoka', sans-serif;
+  }
+
 body {
     display: flex;
     flex-direction: row;
@@ -201,5 +205,51 @@ body {
 #btn-rejouer-home.visible {
     opacity: 1;
     pointer-events: auto;
+}
+
+
+#overlay-regles {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+#overlay-regles-header {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 90%;
+    color: #333;
+    text-align: left;
+    font-size: 0.6em;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    font-size: 1em;
+}
+
+#overlay-regles.active {
+    display: flex;
+}
+
+#overlay-regles-header h2 {
+    color: #b7284e;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#overlay-regles-header ul {
+    padding-left: 20px;
+}
+
+#overlay-regles-header li {
+    margin: 8px 0;
 }
 
