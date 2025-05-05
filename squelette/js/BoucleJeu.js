@@ -4,8 +4,6 @@ export { afficherPodium };
 window.onload = () => {
   document.getElementById("overlay-start").classList.add("visible");
 
-  afficherPodium();
-
   document.getElementById("btn-regles").addEventListener("click", () => {
     document.getElementById("overlay-regles").classList.add("active");
   });
@@ -13,34 +11,47 @@ window.onload = () => {
   document.getElementById("btn-fermer-regles").addEventListener("click", () => {
     document.getElementById("overlay-regles").classList.remove("active");
   });
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+  if (currentUser) {
+    document.getElementById("player-name").value = currentUser.username;
+    document.getElementById("player-name").disabled = true;
+    document.getElementById("player-name").style.backgroundColor = "lightgray";
+  }else {
+    document.getElementById("player-name").value = "";
+  }
   
-
   document.getElementById("btn-jouer").addEventListener("click", () => {
-
-    const nom = document.getElementById("player-name").value.trim();
-
-    const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
-    const nomsExistants = scores.map(e => e.nom.toLowerCase());
-
-    if (!nom) {
-      document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
-      document.querySelector("#overlay-start input#player-name").style.color = "white";
-      alert("Veuillez entrer un nom.");
-      return;
-    } else if (nomsExistants.includes(nom.toLowerCase())) {
-      document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
-      document.querySelector("#overlay-start input#player-name").style.color = "white";
-      alert("Ce nom est déjà utilisé. Choisissez un autre.");
-      
-      return;
-    }
-
-    joueur.nom = nom;
-
-    document.getElementById("overlay-start").classList.remove("visible");
-    init();
-
+    //const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     
+    if (currentUser) {
+      // Si l'utilisateur est connecté
+      joueur.nom = currentUser.username;
+      document.getElementById("overlay-start").classList.remove("visible");
+      init();
+    } else {
+      // Sinon, on demande le nom
+      const nom = document.getElementById("player-name").value.trim();
+      const scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+      const nomsExistants = scores.map(e => e.nom.toLowerCase());
+
+      if (!nom) {
+        document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
+        document.querySelector("#overlay-start input#player-name").style.color = "white";
+        alert("Veuillez entrer un nom.");
+        return;
+      } else if (nomsExistants.includes(nom.toLowerCase())) {
+        document.querySelector("#overlay-start input#player-name").style.backgroundColor = "red";
+        document.querySelector("#overlay-start input#player-name").style.color = "white";
+        alert("Ce nom est déjà utilisé. Choisissez un autre.");
+        return;
+      }
+
+      joueur.nom = nom;
+      document.getElementById("overlay-start").classList.remove("visible");
+      init();
+    }
   });
 };
 
@@ -51,13 +62,10 @@ let joueur = {
   niveau: 1,
 };
 
-
 function init() {
   console.log("Page et ressources prêtes à l'emploi");
 
   grille = new Grille(9, 9, 6, joueur);
-  
-  //grille.verifierGrille();
   grille.showCookies();
 
   // Nettoyage initial de la grille
@@ -66,14 +74,14 @@ function init() {
   // lancer le chrono
   grille.CompteARebours();
 
-  
+  // Afficher le podium
+  afficherPodium();
 }
 
 function nettoyerGrilleInit() {
-
   grille.supprimeEnCascade(() => {
     grille.score = 0;
-    grille.majScore(0); // met à jour l'affichage sans ajouter de points
+    grille.majScore(0);
   });
 }
 

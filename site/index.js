@@ -16,21 +16,36 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOpen.classList.remove('open');
         }
     });
-});
 
-let lastScroll = 0;
-const header = document.querySelector("header nav"); 
+    // bouton connexion/déconnexion
+    const authLink = document.getElementById('auth-link');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-window.addEventListener("scroll", () => {
-    let currentScroll = window.scrollY;
-
-    if (currentScroll > lastScroll && currentScroll > 300) {
-        header.style.transform = "translateY(-100%)";
-    } else {
-        header.style.transform = "translateY(0)";
+    if (currentUser) {
+        authLink.textContent = 'Déconnexion';
+        authLink.href = '#';
+        authLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        });
     }
 
-    lastScroll = currentScroll;
+    // navBar scroll
+    let lastScroll = 0;
+    const header = document.querySelector("header nav"); 
+
+    window.addEventListener("scroll", () => {
+        let currentScroll = window.scrollY;
+
+        if (currentScroll > lastScroll && currentScroll > 300) {
+            header.style.transform = "translateY(-100%)";
+        } else {
+            header.style.transform = "translateY(0)";
+        }
+
+        lastScroll = currentScroll;
+    });
 });
 
 function gostart(url) {

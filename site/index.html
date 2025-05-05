@@ -9,8 +9,12 @@
 <body>
     <header>
         <nav>
-        <h1>Manhattan Inc</h1>
-
+            <h1>Manhattan Inc</h1>
+            <div class="nav-links">
+                <a href="index.html" class="active">Accueil</a>
+                <a href="/site/scores/scores.html">Scores</a>
+                <a href="/site/connexion/connexion.html" id="auth-link">Connexion</a>
+            </div>
         </nav>
         
         <div class="games-container">
@@ -27,7 +31,7 @@
             <div class="game-block">
                 <img src="assets/images/Shadow_Trials_1.png" alt="Shadow Trials">
                 <h2>Shadow Trials</h2>
-                <button onclick="gostart('connexion.html')">Jouer</button>
+                <button onclick="gostart('/site/connexion/connexion.html')">Jouer</button>
             </div>
         </div>
 
@@ -55,6 +59,6 @@
         </footer>
     </header>
 
-<script src="index.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>

@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary: #d33bfd;
+    --primary-dark: #b02fd8;
+    --background: linear-gradient(135deg, #13181d, #20212e, #341b47);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-light: #ffffff;
+    --text-gray: #cccccc;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-light);
+    background: var(--background);
+    min-height: 100vh;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 5%;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    width: 90%;
+    z-index: 1000;
+}
+
+header nav h1 {
+    color: var(--primary);
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 2em;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(211, 59, 253, 0.3);
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background: var(--primary);
+    color: white;
+}
+
+.auth-container {
+    padding: 180px 5% 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 180px);
+}
+
+.auth-box {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(211, 59, 253, 0.1);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-light);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-light);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-light);
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(211, 59, 253, 0.2);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(211, 59, 253, 0.4);
+}
+
+footer {
+    margin: 0;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+footer .column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--text-gray);
+    padding: 20px;
+}
+
+footer .column p {
+    margin: 8px 0;
+    transition: all 0.3s ease;
+}
+
+footer .column p:hover {
+    cursor: pointer;
+    color: var(--text-light);
+    transform: translateX(5px);
+}
+
+footer .column h3 {
+    margin: 10px 0;
+    color: var(--primary);
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    header nav {
+        padding: 20px 5%;
+    }
+
+    header nav h1 {
+        font-size: 1.5em;
+    }
+
+    .auth-container {
+        padding: 100px 20px 20px;
+    }
+
+    .auth-box {
+        padding: 20px;
+    }
+
+    .tab-btn {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .form-group input {
+        padding: 10px;
+    }
+
+    .submit-btn {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    footer {
+        padding: 20px;
+    }
+
+    footer .column {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}

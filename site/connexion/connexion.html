@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="connexion.css">
+    <title>Manhattan Inc - Connexion</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h1>Manhattan Inc</h1>
+            <div class="nav-links">
+                <a href="../index.html">Accueil</a>
+                <a href="../scores/scores.html">Scores</a>
+                <a href="connexion.html" class="active">Connexion</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <div class="auth-box">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">Connexion</button>
+                <button class="tab-btn" data-tab="register">Inscription</button>
+            </div>
+
+            <div class="tab-content active" id="login">
+                <h2>Connexion</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Se connecter</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="register">
+                <h2>Inscription</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Nom d'utilisateur</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Mot de passe</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirmer le mot de passe</label>
+                        <input type="password" id="register-confirm-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="column">
+            <h3>Aide</h3>
+            <p>contact@manhattaninc.fr</p>
+            <p>Contactez-nous</p>
+            <p>Comment acheter</p>
+        </div>
+
+        <div class="column">
+            <h3>Recrutement</h3>
+            <p>business@manhattaninc.fr</p>
+            <p>Postuler en ligne</p>
+            <p>Comment faire ?</p>
+        </div>
+
+        <div class="column">
+            <h3>Réseaux</h3>
+            <p>Facebook</p>
+            <p>Twitter</p>
+            <p>Instagram</p>
+        </div>
+    </footer>
+
+    <script src="connexion.js"></script>
+</body>
+</html>
