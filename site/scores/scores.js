@@ -57,9 +57,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    
+
     // Charger les scores au chargement de la page
     loadScores();
 
     // Mettre à jour les scores toutes les 30 secondes
     setInterval(loadScores, 30000);
+
+    const authLink = document.getElementById('auth-link');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (currentUser) {
+        authLink.textContent = 'Déconnexion';
+        authLink.href = '#';
+        authLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        });
+    }
 }); 
