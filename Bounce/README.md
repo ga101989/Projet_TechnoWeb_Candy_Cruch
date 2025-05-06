@@ -72,24 +72,3 @@ Le jeu est conçu pour une expérience à deux joueurs sur le même écran :
 
 -   **Entrées Utilisateur**: `input.js` écoute les touches spécifiques pour chaque joueur (par exemple, Espace pour J1, Entrée pour J2).
 
-## 6. Explication du Rendu en Canvas
-
-Le rendu graphique de "BOUNCE" est entièrement géré via l'API Canvas 2D de HTML5.
-
--   **Initialisation**: Un élément `<canvas>` est défini en HTML. `renderer.js` obtient une référence à cet élément et à son contexte de dessin 2D (`this.ctx`).
--   **Boucle de Rendu**: La fonction `gameLoop` dans `game.js` utilise `requestAnimationFrame(this.gameLoop.bind(this))` pour créer une boucle de rendu fluide et synchronisée avec le rafraîchissement de l'écran. À chaque itération, elle appelle `this.renderer.render(this)`.
--   **Nettoyage du Canvas**: La première étape de `renderer.render()` est `this.clear()`, qui remplit tout le canvas avec une couleur de fond (noir), effaçant ainsi le contenu de la frame précédente.
--   **Système de Coordonnées et Caméras**:
-    -   Le jeu se déroule dans un monde avec des coordonnées Y qui augmentent vers le bas. Cependant, comme le jeu défile vers le haut, les positions Y des entités diminuent à mesure qu'elles montent.
-    -   Chaque caméra (`this.cameras[i]`) a une position `y` qui représente le point le plus haut de sa vue.
-    -   Lors du dessin, les positions des entités du monde sont translatées en positions à l'écran en soustrayant la position `y` de la caméra appropriée. Par exemple, `screenY = worldY - cameraY`.
--   **Dessin des Éléments**:
-    -   **Arrière-plan et Grille**: Des éléments comme l'arrière-plan en dégradé et la grille de perspective sont dessinés en premier pour créer une scène. La grille est dessinée par rapport à la position de chaque caméra pour donner une illusion de mouvement.
-    -   **Ligne d'Arrivée**: La ligne d'arrivée est dessinée à une position fixe dans le monde du jeu (`endY`), mais sa position à l'écran dépend de la caméra de chaque joueur. Le motif à damier est généré dynamiquement.
-    -   **Entités (Joueurs, Obstacles)**: Chaque type d'entité possède sa propre méthode `draw(ctx, cameraY)` (ou simplement `draw(ctx)` si la transformation de caméra est gérée par le renderer).
-        -   `renderer.drawPlayer()` et `renderer.drawObstacle()` préparent le contexte pour le dessin d'une entité spécifique. Cela inclut la translation du contexte pour centrer la vue du joueur et appliquer la position de la caméra (`ctx.translate(playerX_in_viewport, -this.cameras[playerIndex].y)`), puis appelle la méthode `draw()` de l'entité.
--   **Gestion de l'Écran Partagé (Clipping)**:
-    -   Avant de dessiner la vue de chaque joueur, `renderer.js` définit un rectangle de découpage (`ctx.rect(startX, 0, viewWidth, canvasHeight); ctx.clip();`). Tout dessin effectué après cette opération ne sera visible que dans les limites de ce rectangle.
-    -   Ceci est crucial pour s'assurer que le contenu du Joueur 1 n'empiète pas sur la zone du Joueur 2, et vice-versa.
--   **Transformations**: L'API Canvas utilise un système de transformations basé sur une matrice (translation, rotation, échelle). `ctx.save()` et `ctx.restore()` sont abondamment utilisés pour appliquer des transformations localement à un dessin spécifique sans affecter les dessins suivants. Par exemple, pour dessiner un obstacle rotatif, le contexte est translaté à la position de l'obstacle, puis tourné, l'obstacle est dessiné, puis le contexte est restauré à son état précédent.
--   **Effets Visuels**: Des effets comme les traînées des joueurs sont dessinés par la méthode `drawTrail()` du joueur, qui dessine une série de cercles de plus en plus transparents aux positions précédentes du joueur. Le tremblement de caméra (`shakeCamera`) modifie temporairement et aléatoirement la translation de la caméra pour un effet d'impact.
