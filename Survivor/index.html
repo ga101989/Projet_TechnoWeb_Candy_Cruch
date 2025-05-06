@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Survivor Game - A thrilling adventure game where you fight for survival.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/styles.css">
+    <link rel="icon" href="style/pictures/icon.ico" type="image/x-icon">
+    <title>Survivor</title>
+</head>
+<body>
+  <div id="menu">
+    <h1>Cube Invasion</h1>
+    <input type="text" id="playerName" placeholder="Entrez votre nom" />
+    <button id="startButton">Jouer</button>
+    <button id="scoreButton">Score</button>
+    <button id="helpButton">Aide</button>
+  </div>
+
+  <div id="game-over-panel" >
+    <h1>Game Over</h1>
+    <p id="game-time"></p>
+    <input type="text" id="newGameName" placeholder="Entrez votre nom" />
+    <button id="restart-button">Restart</button>
+  </div>
+  
+    <canvas id="gameCanvas" width="1200" height="560"></canvas>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
