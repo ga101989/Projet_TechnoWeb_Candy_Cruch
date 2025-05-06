@@ -177,6 +177,10 @@ export default class GameManager {
     // Afficher le panneau de fin de partie
     const gameOverPanel = document.getElementById("game-over-panel");
     gameOverPanel.style.display = "block";
+
+    let scores = JSON.parse(localStorage.getItem("scoresCubeInvasion")) || [];
+    scores.push({ name: name, time: elapsedTime });
+    localStorage.setItem("scoresCubeInvasion", JSON.stringify(scores));
   
     // Ajouter un gestionnaire pour redémarrer le jeu
     document.getElementById("restart-button").onclick = () => {
