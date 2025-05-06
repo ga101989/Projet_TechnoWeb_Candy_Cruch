@@ -41,11 +41,11 @@ Le code source du jeu est organisé dans le dossier `src/` et est divisé en plu
 
 ## 4. Explication des Scripts Clés
 
--   **`src/core/game.js`**: C'est le chef d'orchestre du jeu. Il initialise tous les gestionnaires et entités, démarre la boucle de jeu principale (`gameLoop`) qui met à jour la logique du jeu et effectue le rendu à chaque frame (via `requestAnimationFrame`). Il gère également les transitions entre les différents états du jeu (par exemple, passage du menu au jeu, gestion de la pause).
+-   **`src/core/game.js`**: Il initialise tous les gestionnaires et entités, démarre la boucle de jeu principale (`gameLoop`) qui met à jour la logique du jeu et effectue le rendu à chaque frame (via `requestAnimationFrame`). Il gère également les transitions entre les différents états du jeu (par exemple, passage du menu au jeu, gestion de la pause).
 
--   **`src/entities/player.js`**: Ce script définit tout ce qui concerne le joueur. Il gère la position, la vélocité (affectée par la gravité et les sauts), la couleur actuelle (cruciale pour interagir avec les obstacles), la détection des collisions avec les obstacles (en collaboration avec `physics.js` et les méthodes de collision spécifiques des obstacles), et la mise à jour du score. Il est aussi responsable de dessiner le joueur et sa traînée.
+-   **`src/entities/player.js`**: Ce script définit tout ce qui concerne le joueur. Il gère la position, la vélocité (affectée par la gravité et les sauts), la couleur actuelle, la détection des collisions avec les obstacles (en collaboration avec `physics.js` et les méthodes de collision spécifiques des obstacles), et la mise à jour du score. Il est aussi responsable de dessiner le joueur et sa traînée.
 
--   **`src/managers/obstacleManager.js`**: Ce gestionnaire est vital pour la rejouabilité et le défi. Il génère dynamiquement les obstacles pour les deux joueurs en suivant des schémas et des niveaux de difficulté prédéfinis. Il s'assure que les obstacles sont correctement espacés et gère leur apparition et leur disparition de l'écran en fonction de la progression des joueurs.
+-   **`src/managers/obstacleManager.js`**: Ce gestionnaire est pour la rejouabilité et le défi. Il génère dynamiquement les obstacles pour les deux joueurs en suivant des schémas et des niveaux de difficulté prédéfinis. Il s'assure que les obstacles sont correctement espacés et gère leur apparition et leur disparition de l'écran en fonction de la progression des joueurs.
 
 -   **`src/rendering/renderer.js`**: Le cœur du système de rendu. Il prend en charge le dessin de chaque frame du jeu sur le Canvas. Ses responsabilités incluent :
     -   Nettoyer le canvas.
