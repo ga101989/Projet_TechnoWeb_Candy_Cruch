@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Fonction pour charger les scores depuis le localStorage
     function loadScores() {
-        const games = ['candy', 'bounce', 'shadow'];
+        const games = ['candy', 'cubeInvasion'];
         
         games.forEach(game => {
             const scores = JSON.parse(localStorage.getItem(`scores${game.charAt(0).toUpperCase() + game.slice(1)}`)) || [];
