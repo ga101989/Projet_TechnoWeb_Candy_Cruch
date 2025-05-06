@@ -36,11 +36,6 @@ export default class Cookie {
     img.src = url;
     img.width = 80;
     img.height = 80;
-    // pour pouvoir récupérer la ligne et la colonne
-    // quand on cliquera sur une image et donc à partir
-    // de cette ligne et colonne on pourra récupérer le cookie
-    // On utilise la dataset API du DOM, qui permet de stocker
-    // des données arbitraires dans un élément HTML
     img.dataset.ligne = ligne;
     img.dataset.colonne = colonne;
 
@@ -49,17 +44,12 @@ export default class Cookie {
   }
 
   isSelectionnee() {
-    // on regarde si l'image a la classe CSS "cookies-selected"
-    // A FAIRE
+    // On va vérifier si l'image a la classe CSS "cookies-selected"
     return this.htmlImage.classList.contains("cookies-selected");
   }
 
   selectionnee() {
-    // on change l'image et la classe CSS
-    // On doit mettre à la place de l'URL classique, l'URL de l'image
-    // surlignée correspondant au type de cookie. Voir la propriété
-    // statique de la classe Cookie, urlsImagesSurlignees
-    // A FAIRE
+
     this.htmlImage.src = Cookie.urlsImagesSurlignees[this.type];
     // On va ajouter la classe CSS "cookies-selected" à
     // l'image du cookie
@@ -137,5 +127,53 @@ export default class Cookie {
   setAlignement(alignement) {
     this.alignement = alignement;
   }
+  
+
+    /**
+   * renvoie true si c'est à une distance de 1 sinon false
+   * @param {*} cookie1 
+   * @param {*} cookie2 
+   * @returns 
+   */
+    static swapPossible(cookie1, cookie2) {
+
+      let distance = Cookie.distance(cookie1, cookie2);
+  
+      return distance === 1;
+    }
+
+
+    /**
+     * On swappe les cookies
+     * @param {*} c1 
+     * @param {*} c2 
+     */
+    static swapCookies(c1, c2) {
+
+      if(Cookie.swapPossible(c1, c2)) {
+        // on swappe les cookies dans le tableau
+        // On échange leurs images et types
+  
+        // On échange les types
+        let tmp = c1.type;
+        c1.type = c2.type;
+        c2.type = tmp;
+  
+        // On échange les images
+        tmp = c1.htmlImage.src;
+        c1.htmlImage.src = c2.htmlImage.src;
+        c2.htmlImage.src = tmp;
+
+        c1.deselectionnee();
+        c2.deselectionnee();
+      }
+
+    }
+
+    static getLCFromImg(img) {
+      return [img.dataset.ligne, img.dataset.colonne];
+    }
+
+
   
 }

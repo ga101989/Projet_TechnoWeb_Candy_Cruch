@@ -1,16 +1,22 @@
 <html lang="fr">
 
 <head>
-    <title>Un jeu type candy crush version 1</title>
+    <title>Candy Game</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/images/favi.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+
     <script src="lib/lodash.js"></script>
     <script type="module" src="js/BoucleJeu.js"></script>
 </head>
 
 <body>
-    <H1>Candy zbeub</H1>
-    <button class="alignements" id="alignements">Montrer alignements</button>
+    <div id="logoetimage">
+        <img src="./assets/images/Logo3.png" alt="Logo Candy Game" width=70% height=75%/>
+        <div id="podium"></div>
+        <button id="btn-rejouer-home" class="btn-rejouer-home"><b>Rejouer</b></button>
+    </div>
     <div id="main">
         <div id="infos">
             <div>Temps : 0</div>
@@ -99,8 +105,34 @@
             <div></div>
             <div></div>
             <div></div>
+            
         </div>
     </div>
+
+    <div id="overlay-start">
+        <img src="./assets/images/Logo3.png" alt="Logo Candy Game" width=30% height=35%/>
+        <label for="player-name">Entrez votre nom :</label>
+        <input type="text" id="player-name" placeholder="Votre nom">
+        <button id="btn-jouer" class="styled-button">Jouer</button>
+        <button id="btn-regles" class="styled-button">Règles du jeu</button>
+    </div>
+
+    <div id="overlay-niveau"></div>
+
+    <div id="overlay-regles">
+        <div id="overlay-regles-header">
+            <h2>Règles du jeu</h2>
+            <p>Le but du jeu est d'aligne 3 bonbons ou plus pour les faire disparaître.</p>
+            <p>Tu peux déplacer un bonbon vers la gauche, la droite, le haut ou le bas.</p>
+            <p>Chaque bonbon aligné te rapporte 20 points, si tu as 4 bonbons pareils d'affilée alors ça te rapportera 80 points.</p>
+            <p>Tu as 60 secondes par niveau pour marquer un maximum de points.</p>
+            <p>Si tu atteins l'objectif de points, tu passes au niveau suivant.</p>
+            <p>Si tu n'atteins pas l'objectif dans le temps imparti, tu perds.</p>
+            <p>Les 3 meilleurs scores sont enregistrés dans le podium.</p>
+            <button id="btn-fermer-regles" class="styled-button">Fermer</button>
+        </div>
+    </div>
+    
 </body>
 
 </html>

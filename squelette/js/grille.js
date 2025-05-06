@@ -1,22 +1,126 @@
 import Cookie from "./cookie.js";
 import { create2DArray } from "./utils.js";
+import { afficherPodium } from "./BoucleJeu.js";
+
 
 /* Classe principale du jeu, c'est une grille de cookies. Le jeu se joue comme
 Candy Crush Saga etc... c'est un match-3 game... */
 export default class Grille {
-  cookieSelectionnes = [];
   /**
    * Constructeur de la grille
    * @param {number} l nombre de lignes
    * @param {number} c nombre de colonnes
    */
-  constructor(l, c, difficulte) {
+  constructor(l, c, difficulte, joueur) {
     this.c = c;
     this.l = l;
     this.difficulte = difficulte;
-
+    this.score = 0;
+    this.TabCookieEnCours = [];
+    this.niveau = 1;
     this.tabCookies = this.remplirTableauDeCookies(difficulte);
+    this.temps = 60;
+    this.intervalId = null;
+    this.tempsParNiveau = 60;
+    this.joueur = joueur;
   }
+
+  majScore(points) {
+    this.score += points;
+    document.querySelector("#infos div:nth-child(2)").textContent = `Score : ${this.score} / ${this.seuilScore()}`;
+
+    if (this.score >= this.seuilScore()) {
+      this.NiveauSuivant();
+    }
+      
+  }
+
+  majNiveau() {
+    document.querySelector("#infos div:nth-child(3)").textContent = `Niveau : ${this.niveau}`;
+  }
+
+  CompteARebours() {
+    clearInterval(this.intervalId);
+    this.temps = this.tempsParNiveau;
+  
+    document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${this.temps}`;
+  
+    this.intervalId = setInterval(() => {
+      this.temps--;
+      document.querySelector("#infos div:nth-child(1)").textContent = `Temps : ${this.temps}`;
+  
+      if (this.temps <= 0) {
+        clearInterval(this.intervalId);
+        this.FinDuJeu();
+      }
+    }, 1000);
+  }
+  
+
+  FinDuJeu() {
+    const overlay = document.getElementById("overlay-niveau");
+    const boutonRejouer = document.getElementById("btn-rejouer-home");
+    boutonRejouer.classList.add("visible");
+    overlay.innerHTML = `
+        <p>Temps écoulé ! Partie terminée.</p>
+        <button id="btn-rejouer" class="styled-button">Rejouer</button>
+      `;
+    overlay.classList.add("visible");
+
+    this.TabCookieEnCours = [];
+    document.querySelectorAll("#grille img").forEach(img => {
+      img.onclick = null;
+      img.ondragstart = null;
+      img.ondrop = null;
+    });
+  
+    document.querySelectorAll("#grille div").forEach(div => {
+      div.innerHTML = "";
+    });
+
+    this.joueur.score = this.score;
+    this.joueur.niveau = this.niveau;
+    let scores = JSON.parse(localStorage.getItem("scoresCandy")) || [];
+    scores.push({ nom: this.joueur.nom, score: this.joueur.score, niveau: this.joueur.niveau });
+    localStorage.setItem("scoresCandy", JSON.stringify(scores));
+  
+    document.getElementById("btn-rejouer").addEventListener("click", () => {
+      overlay.classList.remove("visible");
+      this.rejouer();
+    });
+
+    document.getElementById("btn-rejouer-home").addEventListener("click", () => {
+      overlay.classList.remove("visible");
+      boutonRejouer.classList.remove("visible");
+      this.rejouer();
+    });
+
+    afficherPodium();
+
+    setTimeout(() => {
+      overlay.classList.remove("visible");
+    }, 5000);
+  
+  }
+
+  
+
+  rejouer() {
+    this.score = 0;
+    this.niveau = 1;
+    this.difficulte = 6;
+    this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
+    this.majScore(0);
+    this.majNiveau();
+    this.showCookies();
+  
+    setTimeout(() => {
+      this.supprimeEnCascade(() => {
+        this.CompteARebours();
+      });
+    }, 100);
+  }
+  
 
   /**
    * parcours la liste des divs de la grille et affiche les images des cookies
@@ -45,53 +149,83 @@ export default class Grille {
       // on récupère le cookie correspondant à cette case
       let cookie = this.tabCookies[ligne][colonne];
       // on récupère l'image correspondante
+      if (!cookie || !cookie.htmlImage) return;
       let img = cookie.htmlImage;
 
+      
       img.onclick = (event) => {
-        console.log("On a cliqué sur la ligne " + ligne + " et la colonne " + colonne);
-        //let cookieCliquee = this.getCookieFromLC(ligne, colonne);
-        console.log("Le cookie cliqué est de type " + cookie.type);
 
-        // test : si on a cliqué sur un cookie déjà sélectionné
-        // on le désélectionne et on ne fait rien.
-        if(cookie.isSelectionnee()) {
-          cookie.deselectionnee();
-          // on la retire du tableau des cookies sélectionnés
-          this.cookieSelectionnes = [];
-          return;
+        let cookieImage = event.target;
+
+        let cookie = this.getCookieFromImage(cookieImage);
+
+          
+        if (!this.TabCookieEnCours.includes(cookie)) {
+            this.TabCookieEnCours.push(cookie);
+            cookie.selectionnee();
+        }
+        if (this.TabCookieEnCours.length == 2) {
+            let cookie1 = this.TabCookieEnCours[0];
+            let cookie2 = this.TabCookieEnCours[1];
+  
+            this.TryDeSwipe(cookie1, cookie2);
         }
 
-        // highlight + changer classe CSS
-        cookie.selectionnee();
+      };
+  
+      img.ondragstart = (event) => {
+        console.log("dragstart sur cookie");
+        // on récupère l'image qui a été draggée
+        let cookieImage = event.target;
 
-        // A FAIRE : tester combien de cookies sont sélectionnées
-        // si 0 on ajoute le cookie cliqué au tableau
-        // si 1 on ajoute le cookie cliqué au tableau
-        // et on essaie de swapper
-        let nbCookiesSelectionnes = this.cookieSelectionnes.length;
-        switch (nbCookiesSelectionnes) {
-          case 0:
-            // On mémorise la cookie courante
-            this.cookieSelectionnes.push(cookie);
-            break;
-          case 1:
-            this.cookieSelectionnes.push(cookie);
-            // Maintenant on a deux cookies selectionnees
-            // On va regarder si on peut les swapper
-            Cookie.swapCookies(this.cookieSelectionnes[0], this.cookieSelectionnes[1]);  
-            // dans tous les cas (swap ou pas) on vide le tableau
-            this.cookieSelectionnes = [];
-            break;
-        }
+        let cookie = this.getCookieFromImage(cookieImage);
+
+        // on stocke dans l'objet event.dataTransfer les infos
+        // sur le cookie
+        event.dataTransfer.setData("text", JSON.stringify(cookieImage.dataset));
       }
 
-      // A FAIRE : ecouteur de drag'n'drop
-      img.ondragstart = (event) => {
+
+      img.ondragover = (event) => {
+        
+        event.preventDefault();
+
+      }
+
+      // on ajoute une classe CSS quand on survole l'image
+      img.ondragenter = (event) => {
+
+        event.target.classList.add("grilleDragOver");
+
+      }
+
+
+      // on enlève la classe CSS quand on sort de l'image
+      img.ondragleave = (event) => {
+
+        event.target.classList.remove("grilleDragOver");
+
+      }
+
+      img.ondrop = (event) => {
+        // on supprime l'effet de survol
+        event.target.classList.remove("grilleDragOver");
+
+        // on récupère les infos du cookie draggé
+        let data = JSON.parse(event.dataTransfer.getData("text"));
+
         let cookieImage = event.target;
-        let l = cookieImage.dataset.ligne;
-        let c = cookieImage.dataset.colonne;
+        let l = parseInt(cookieImage.dataset.ligne);
+        let c = parseInt(cookieImage.dataset.colonne);
+
         let t = this.tabCookies[l][c].type;
         console.log(`dragstart sur cookie : t = ${t} l = ${l} c = ${c}`); 
+
+        let cookie1 = this.getCookieFromLC(data.ligne, data.colonne);
+        let cookie2 = this.getCookieFromImage(cookieImage);
+
+        // on swappe les cookies
+        this.TryDeSwipe(cookie1, cookie2);
       }
 
       // on affiche l'image dans le div pour la faire apparaitre à l'écran.
@@ -99,10 +233,64 @@ export default class Grille {
     });
   }
 
-  // inutile ?
+  getCookieFromImage(img) {
+
+    let [ligne, colonne] = Cookie.getLCFromImg(img);
+
+    return this.getCookieFromLC(ligne, colonne);
+  }
+
   getCookieFromLC(ligne, colonne) {
     return this.tabCookies[ligne][colonne];
   }
+
+
+  swapLesCookies(cookie1, cookie2) {
+    if (Cookie.swapPossible(cookie1, cookie2)) {
+      
+      Cookie.swapCookies(cookie1, cookie2);
+
+      return true;
+    }  
+    
+    else {return false;}
+
+    
+  }
+
+  TryDeSwipe(cookie1, cookie2) {
+
+    if(this.swapLesCookies(cookie1, cookie2)) {
+      this.TabCookieEnCours = [];
+      cookie2.deselectionnee();
+      cookie1.deselectionnee();
+
+      this.supprimeEnCascade();
+
+    }
+    else{
+      console.log("Impossible de swap les cookies");
+      this.TabCookieEnCours.splice(1, 1);
+      cookie2.deselectionnee();
+      this.TabCookieEnCours = [];
+    }
+
+  }
+
+  rajoutDeCookies() {
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        if (this.tabCookies[ligne][colonne] === null) {
+          const type = Math.floor(Math.random() * this.difficulte);
+          const nouveauCookie = new Cookie(type, ligne, colonne);
+          this.tabCookies[ligne][colonne] = nouveauCookie;
+        }
+      }
+    }
+  
+    this.reafficherCookies();
+  }
+
 
   /**
    * Initialisation du niveau de départ. Le paramètre est le nombre de cookies différents
@@ -194,16 +382,50 @@ export default class Grille {
   }
 
   // Méthode qui permet de supprimer les cookies alignés
-  supprimerAlignements() { 
+  supprimerAlignements() {
+    let nbCases = 0;
     for (let ligne = 0; ligne < this.l; ligne++) {
       for (let colonne = 0; colonne < this.c; colonne++) { // on repère tous les cookies qui sont alignés
         if (this.tabCookies[ligne][colonne].alignement) {
-          this.tabCookies[ligne][colonne].supprimer(); // on supprime les cookies alignés
+
+          this.tabCookies[ligne][colonne].supprimerCookie(); // on supprime l'image du cookie
           this.tabCookies[ligne][colonne] = null;
+          nbCases++;// pour le nbre de cases à supprimer
         }
       }
     }
+
+    if (nbCases > 0) {
+      this.majScore(nbCases * 20);
+    }
+
+    this.faireDescendreCookies();
+    this.rajoutDeCookies();
+
   }
+
+
+  supprimeEnCascade(callback) {
+    this.detectionAlignements();
+  
+    let aSupprimer = this.tabCookies.flat().some(c => c?.alignement);
+  
+    if (aSupprimer) {
+      setTimeout(() => {
+        this.supprimerAlignements();
+  
+        setTimeout(() => {
+          this.supprimeEnCascade(callback);
+        }, 200);
+      }, 200);
+    } else {
+      if (callback) callback();
+    }
+  }
+  
+  
+
+
 
   highlightAlignments() {
     for (let ligne = 0; ligne < this.l; ligne++) {
@@ -225,14 +447,118 @@ export default class Grille {
           trou++;
         } else if (trou > 0) {
           this.tabCookies[ligne][colonne].deplacer(trou);
+
+          this.tabCookies[ligne + trou][colonne] = this.tabCookies[ligne][colonne];
+        this.tabCookies[ligne][colonne] = null;
+        }
+      }
+    }
+
+    // Remplir les cases vides avec de nouveaux cookies
+    this.reafficherCookies();
+
+  }
+
+  reafficherCookies() {
+    let caseDivs = document.querySelectorAll("#grille div");
+  
+    for (let ligne = 0; ligne < this.l; ligne++) {
+      for (let colonne = 0; colonne < this.c; colonne++) {
+        const index = ligne * this.c + colonne;
+        const div = caseDivs[index];
+        div.innerHTML = "";
+  
+        const cookie = this.tabCookies[ligne][colonne];
+        if (cookie && cookie.htmlImage) {
+          this.ajouterListenersSurImage(cookie.htmlImage);
+          div.appendChild(cookie.htmlImage);
         }
       }
     }
   }
+  
 
-  verifierGrille(){
-    this.detectionAlignements();
-    // this.supprimerAlignements(alignements);
-    // this.faireDescendreCookies();
+  ajouterListenersSurImage(img) {
+    img.onclick = (event) => {
+      if (this.enCoursDeCascade) return;
+  
+      let cookieImage = event.target;
+      let cookie = this.getCookieFromImage(cookieImage);
+  
+      if (!this.TabCookieEnCours.includes(cookie)) {
+        this.TabCookieEnCours.push(cookie);
+        cookie.selectionnee();
+      }
+      if (this.TabCookieEnCours.length == 2) {
+        let cookie1 = this.TabCookieEnCours[0];
+        let cookie2 = this.TabCookieEnCours[1];
+        this.TryDeSwipe(cookie1, cookie2);
+      }
+    };
+  
+    img.ondragstart = (event) => {
+      if (this.enCoursDeCascade) return;
+  
+      let cookieImage = event.target;
+      event.dataTransfer.setData("text", JSON.stringify(cookieImage.dataset));
+    };
+  
+    img.ondragover = (event) => event.preventDefault();
+  
+    img.ondragenter = (event) => {
+      event.target.classList.add("grilleDragOver");
+    };
+  
+    img.ondragleave = (event) => {
+      event.target.classList.remove("grilleDragOver");
+    };
+  
+    img.ondrop = (event) => {
+      event.target.classList.remove("grilleDragOver");
+      let data = JSON.parse(event.dataTransfer.getData("text"));
+  
+      let cookieImage = event.target;
+      let l = parseInt(cookieImage.dataset.ligne);
+      let c = parseInt(cookieImage.dataset.colonne);
+  
+      let cookie1 = this.getCookieFromLC(parseInt(data.ligne), parseInt(data.colonne));
+      let cookie2 = this.getCookieFromImage(cookieImage);
+  
+      this.TryDeSwipe(cookie1, cookie2);
+    };
   }
+
+  seuilScore() {
+    return this.niveau * 1000;
+  }
+
+
+  NiveauSuivant() {
+    this.niveau++;
+    this.majNiveau();
+    this.CompteARebours();
+    //difficulté
+    this.difficulte = Math.min(this.difficulte + 1, 5);//
+  
+    //nouvelle grille
+    this.tabCookies = this.remplirTableauDeCookies(this.difficulte);
+    this.showCookies();
+    this.supprimeEnCascade(() => {
+      this.score = 0;
+      this.majScore(0);
+    });
+    this.NiveauSuivantAffichage();
+    //alert(`Bravo ! Vous passez au niveau ${this.niveau}`);
+  }
+
+  NiveauSuivantAffichage() {
+    const overlay = document.getElementById("overlay-niveau");
+    overlay.innerHTML = `<p>Niveau ${this.niveau}</p>`;
+    overlay.classList.add("visible");
+    setTimeout(() => {
+      overlay.classList.remove("visible");
+    }, 1500);
+  }
+
+
 }
