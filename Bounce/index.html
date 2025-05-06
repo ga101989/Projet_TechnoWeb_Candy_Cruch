@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bounce</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #333;
+        }
+        #game-container {
+            position: relative;
+        }
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+        .player-score {
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #player1-score {
+            left: 20px;
+        }
+        #player2-score {
+            right: 20px;
+        }
+        #game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-layer">
+            <div id="player1-score" class="player-score">J1: 0</div>
+            <div id="player2-score" class="player-score">J2: 0</div>
+            <div id="game-message"></div>
+        </div>
+    </div>
+
+    <!-- Core -->
+    <script src="src/core/physics.js"></script>
+    <script src="src/core/input.js"></script>
+    
+    <!-- Entities -->
+    <script src="src/entities/player.js"></script>
+    <script src="src/entities/obstacles/rotator.js"></script>
+    <script src="src/entities/obstacles/pulsar.js"></script>
+    
+    <!-- Managers -->
+    <script src="src/managers/gameState.js"></script>
+    <script src="src/managers/obstacleManager.js"></script>
+    <script src="src/managers/colorManager.js"></script>
+    
+    <!-- Rendering -->
+    <script src="src/rendering/renderer.js"></script>
+    <script src="src/rendering/ui.js"></script>
+    
+    <!-- Main Game -->
+    <script src="src/core/game.js"></script>
+</body>
+</html>
