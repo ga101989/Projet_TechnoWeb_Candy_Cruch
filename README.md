@@ -7,3 +7,5 @@
 [Voir la documentation du jeu Cube invasion](./Survivor/ReadMe.md)
 
 [Document de conception](./Rapport-Conception.pdf)
+
+Auteurs : Bitoun Nathan - Guillou Axel - Boretti Alexander
