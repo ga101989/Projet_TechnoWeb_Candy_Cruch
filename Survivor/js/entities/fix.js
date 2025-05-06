@@ -3,7 +3,7 @@ export default class fix {
       this.x = body.x;
       this.y = body.y;
       this.size = 10;
-      this.value = 20; 
+      this.value = 10; 
       this.speed = 15;
       this.target = target; 
     }

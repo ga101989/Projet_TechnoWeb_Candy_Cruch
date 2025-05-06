@@ -22,13 +22,18 @@ export default class Menu {
         this.showCanvas();
         this.onStart(playerName);
       });
-  
-      this.scoreButton.addEventListener("click", () => {
-        alert("Fonctionnalité score à venir !");
-      });
 
       this.helpButton.addEventListener("click", () => {
         this.showHelp();
+      });
+
+      this.scoreButton.addEventListener("click", () => {
+        const elapsedTime = this.game.getElapsedTime();
+        if (this.playerName) {
+          alert(`Nom du joueur : ${this.playerName}\nTemps de jeu : ${elapsedTime} secondes`);
+        } else {
+          alert("Aucune partie n'a été jouée !");
+        }
       });
     }
   
@@ -39,7 +44,9 @@ export default class Menu {
         "- Rapprochez-vous des ennemis pour les attaquer.\n" +
         "- Éliminez les ennemis pour récupérer de l'expérience.\n" +
         "- Améliorez vos compétences lorsque vous montez de niveau.\n" +
+        "- Récuperer des fixs qui seront sous les points d'expérience de temps en temps.\n" +
         "- Survivez le plus longtemps possible !"
+
       );
     }
     

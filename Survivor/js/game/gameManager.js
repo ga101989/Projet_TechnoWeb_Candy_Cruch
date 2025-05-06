@@ -13,6 +13,7 @@ export default class GameManager {
     const name = document.getElementById("playerName").value;
     this.game = new Game(canvas,name);
     this.animationFrame = null;
+    this.lastTime = 0;
 
     window.addEventListener("keydown", e => this.game.input[e.key] = true);
     window.addEventListener("keyup", e => this.game.input[e.key] = false);
@@ -42,7 +43,7 @@ export default class GameManager {
 
     const healerCount = enemies.filter(enemy => enemy.color === "purple").length;
     const maxHealers = 5;
-    const timeBasedLimit = 6 + Math.floor((Date.now() - this.game.startTime) / 20000) * 2;
+    const timeBasedLimit = 6 + Math.floor((Date.now() - this.game.startTime) / 18000) * 2;
 
     if (enemies.length < timeBasedLimit) {
       enemies.push(spawnRangeEnemySafe(player, 300, canvas));
@@ -60,7 +61,6 @@ export default class GameManager {
         }
         if (Math.random() < 0.05) { // 5% de chance de laisser un cristal d'XP
           fixs.push(new fix(enemies[i],player));
-          alert("Un fix a été laissé par un ennemi !");
          } 
         enemies.splice(i, 1); // Supprime l'ennemi mort
       }
@@ -144,6 +144,20 @@ export default class GameManager {
     drawExperienceBar(ctx, player);
   }
 
+  loop(currentTime = 0) { // Ajoutez un paramètre pour le temps actuel
+    if (this.game.isPaused) {
+      return;
+    }
+  
+    const deltaTime = (currentTime - this.lastTime) / 1000; // Temps écoulé en secondes
+    this.lastTime = currentTime; // Mettez à jour le temps de la dernière frame
+  
+    this.update(deltaTime); // Passez le delta time à la méthode update
+    this.draw();
+  
+    this.animationFrame = requestAnimationFrame((time) => this.loop(time)); // Passez le temps actuel
+  }
+  
   loop() { // Boucle principale du jeu
     if (this.game.isPaused) {
       return;
@@ -151,8 +165,7 @@ export default class GameManager {
     this.update();
     this.draw();
     this.animationFrame = requestAnimationFrame(() => this.loop());
-  }
-  
+  }  
 
   stopGame(name) {
     // Arrêter la boucle du jeu
@@ -208,14 +221,28 @@ export default class GameManager {
     levelUpPanel.innerHTML = `
       <h1>Level Up!</h1> 
       <p>Choose an upgrade:</p>
-      <button id="increase-health">Increase Max Health</button>
-      <button id="increase-damage">Increase Damage</button>
-      <button id="increase-speed">Increase Speed</button>
-      <button id="increase-attack-speed">Increase Attack Speed</button>
-      <button id="increase-range">Increase Range</button>
-      <button id="increase-collection-range">Increase Collection Range</button>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+      <button id="increase-health" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Max Health</button>
+      <button id="increase-damage" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Damage</button>
+      <button id="increase-speed" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Speed</button>
+      <button id="increase-attack-speed" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Attack Speed</button>
+      <button id="increase-range" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Range</button>
+      <button id="increase-collection-range" style="flex: 1 1 30%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">Increase Collection Range</button>
+      </div>
     `;
-  
+
+    // Add hover effect for buttons
+    const buttons = levelUpPanel.querySelectorAll("button");
+    buttons.forEach(button => {
+      button.addEventListener("mouseover", () => {
+      button.style.transform = "translateY(-3px)";
+      button.style.boxShadow = "0 6px 8px rgba(0, 0, 0, 0.4)";
+      });
+      button.addEventListener("mouseout", () => {
+      button.style.transform = "translateY(0)";
+      button.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.3)";
+      });
+    });
     document.body.appendChild(levelUpPanel);
 
     // Ajoutez un gestionnaire d'événements pour les entrées au clavier
