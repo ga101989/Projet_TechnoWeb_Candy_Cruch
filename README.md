@@ -1,15 +1,8 @@
 # Projet_TechnoWeb
 
-lien vers Candy Game :
+[Voir la documentation du jeu ](./squelette/README.md)
 
-/squelette/README.md
+[Voir la documentation du jeu Bounce](./Bounce/README.md)
 
-lien vers Bounce :
-
-/Bounce/README.md
-
-lien vers Cube invasion :
-
-/Survivor/ReadMe.md
-
+[Voir la documentation du jeu Cube invasion](./Survivor/ReadMe.md)
 

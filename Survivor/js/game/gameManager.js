@@ -179,7 +179,7 @@ export default class GameManager {
     gameOverPanel.style.display = "block";
 
     let scores = JSON.parse(localStorage.getItem("scoresCubeInvasion")) || [];
-    scores.push({ name: name, time: elapsedTime });
+    scores.push({ nom: name, time: elapsedTime });
     localStorage.setItem("scoresCubeInvasion", JSON.stringify(scores));
   
     // Ajouter un gestionnaire pour redémarrer le jeu

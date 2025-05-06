@@ -11,15 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
             scores.sort((a, b) => b.score - a.score);
             if (game === 'candy') {
                 scores.sort((a, b) => (b.score - 1000 ** a.niveau) - (a.score - 1000 ** b.niveau));
-            } else if (game === 'bounce') {
-                scores.sort((a, b) => b.score - a.score);
-            } else if (game === 'shadow') {
-                scores.sort((a, b) => b.score - a.score);
+            } else if (game === 'cubeInvasion') {
+                scores.sort((a, b) => b.time - a.time);
             }
 
             if (scores.length < 5) {
                 while (scores.length < 5) {
-                    scores.push({ nom: "-", score: "-", niveau: "-" });
+                    scores.push({ nom: "-", score: "-", niveau: "-" , time: "-" });
                 }
             }
 
@@ -32,25 +30,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span>(Niv ${score.niveau}) ${score.score}</span>
                     </div>
                 `).join('');
-            } else if (game === 'bounce') {
-                // Afficher les 5 meilleurs scores pour Bounce
-                scoreList.innerHTML = scores.slice(0, 5).map((score, index) => `
-                    <div class="score-item
-">
-                        <span>#${index + 1}</span>
-                        <span>${score.nom}</span>
-                        <span>${score.score}</span>
-                    </div>
-                `).join('');
             }
-            else if (game === 'shadow') {
+            else if (game === 'cubeInvasion') {
                 // Afficher les 5 meilleurs scores pour Shadow
                 scoreList.innerHTML = scores.slice(0, 5).map((score, index) => `
                     <div class="score-item
 ">
                         <span>#${index + 1}</span>
                         <span>${score.nom}</span>
-                        <span>${score.score}</span>
+                        <span>${score.time} s</span>
                     </div>
                 `).join('');
             }
